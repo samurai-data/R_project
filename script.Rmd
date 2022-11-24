@@ -8,6 +8,12 @@ output: html_document
 summary(data)
 ```
 
-Sujet : Charge mentale ( des femmes?)
+
+# Sujet 
+Charge mentale ( des femmes?)
 Carte graphique : en attendant
 
+# Bibliographie 
+
+# Donnée surpprimentaire
+https://www.data.gouv.fr/fr/pages/donnees-coronavirus/
