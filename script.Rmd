@@ -8,3 +8,6 @@ output: html_document
 summary(data)
 ```
 
+Sujet : Charge mentale ( des femmes?)
+Carte graphique : en attendant
+
