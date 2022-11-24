@@ -4,3 +4,7 @@ author: "Inessa Kim"
 date: "2022-11-24"
 output: html_document
 ---
+```{r}
+summary(data)
+```
+
