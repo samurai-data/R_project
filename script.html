@@ -9,7 +9,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Inessa Kim" />
+<meta name="author" content="Inessa Kim, Mai-Anh Pham, Nao Ueda" />
 
 
 <title>R_projet</title>
@@ -1485,14 +1485,45 @@ border-radius: 0px;
 
 
 <h1 class="title toc-ignore">R_projet</h1>
-<h4 class="author">Inessa Kim</h4>
+<h4 class="author">Inessa Kim, Mai-Anh Pham, Nao Ueda</h4>
 <h4 class="date">Dernière modif : 25/11/2022</h4>
 
 </div>
 
 
-<div id="présentation-du-sujet-et-de-nos-hypothèses-sociologiques" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> Présentation du sujet
+<div id="rappel-des-consignes-pour-le-dossier" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Rappel des consignes
+pour le dossier</h1>
+<p>Il s’agira d’un dossier en groupe de 2 à 4 étudiant·es au choix à
+partir de données fournies et à rechercher autour d’une même thématique.
+Le dossier rendu sera :</p>
+<ul>
+<li>un document (.odt, .pdf ou .html)</li>
+<li>rédigé de 4 à 6 pages</li>
+<li>à partir d’un fichier .Rmd</li>
+<li>comportant au moins une carte</li>
+<li>présentant des résultats pondérés</li>
+<li>et au moins un test statistique. -&gt; Vous m’enverrez le document
+produit et le script .Rmd au plus tard <strong>le 03/01/23</strong> à
+mon adresse mail <a href="mailto:cecile.rodrigues@univ-lille.fr" class="email">cecile.rodrigues@univ-lille.fr</a> (vous aurez un accusé
+de réception sous 24h).</li>
+</ul>
+<p>Attendus</p>
+<ul>
+<li>Au moins 2 vagues de coco (conseil 1 et 6)</li>
+<li>Résultats pondérés</li>
+<li>Au moins un test statistique</li>
+<li>Pas d’énumération de tests ou de tableaux sans réflexion, fil
+directeur et interprétation</li>
+<li>Recherche de données géographiques pertinentes (voir
+data.gouv.fr)</li>
+<li>Au moins une carte</li>
+<li>Données transmises : coco - vague 1 à coco - vague 6, les autres
+vagues, fonds départements et communes</li>
+</ul>
+</div>
+<div id="présentation-du-sujet-et-de-nos-hypothèses-sociologiques" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Présentation du sujet
 et de nos hypothèses sociologiques</h1>
 <p>Sujet : La charge mentale ( des femmes?) face au Covid</p>
 <p>Définition : la charge mentale entrait dans l’édition 2020 du
@@ -1507,11 +1538,11 @@ sonnette d’alarme quand il faudrait- en pensant que tout repose sur ses
 propres épaules” détaille Laurence Bourgeois.</p>
 <p>Carte graphique : en attendant</p>
 </div>
-<div id="historique-des-étapes-sur-r" class="section level1" number="2">
-<h1><span class="header-section-number">2</span> Historique des étapes
+<div id="historique-des-étapes-sur-r" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> Historique des étapes
 sur R</h1>
-<div id="télécharger-les-packages" class="section level2" number="2.1">
-<h2><span class="header-section-number">2.1</span> Télécharger les
+<div id="télécharger-les-packages" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Télécharger les
 packages</h2>
 <pre class="r"><code>library(tidyverse)</code></pre>
 <pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
@@ -1532,22 +1563,15 @@ library(kableExtra)</code></pre>
 ## L&#39;objet suivant est masqué depuis &#39;package:dplyr&#39;:
 ## 
 ##     group_rows</code></pre>
-<p><em>Les données : coco1 et ??</em></p>
-<pre class="r"><code>coco1 &lt;- read_csv(&quot;fr.cdsp.ddi.elipss.202004coco1.csv&quot;)</code></pre>
-<pre><code>## Rows: 1076 Columns: 313
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: &quot;,&quot;
-## chr   (3): coco1_SWB, coco1_PDSPLT, coco1_PDSPLT_INIT
-## dbl (310): UID_ANONYM_COVID, coco1_q01, coco1_q02, coco1_q03, coco1_q04, coc...
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<p><em>Les données : coco1 et coco6</em></p>
+<pre class="r"><code>coco1 &lt;- read.csv(&quot;fr.cdsp.ddi.elipss.202004coco1.csv&quot;)</code></pre>
+<pre class="r"><code>coco6 &lt;- read.csv(&quot;fr.cdsp.ddi.elipss.202010.csv&quot;)</code></pre>
 </div>
-<div id="choisir-les-variables" class="section level2" number="2.2">
-<h2><span class="header-section-number">2.2</span> Choisir les
+<div id="choisir-les-variables" class="section level2" number="3.2">
+<h2><span class="header-section-number">3.2</span> Choisir les
 variables</h2>
-<div id="charactères-socio-démographiques-de-lindividu" class="section level3" number="2.2.1">
-<h3><span class="header-section-number">2.2.1</span> Charactères
+<div id="charactères-socio-démographiques-de-lindividu" class="section level3" number="3.2.1">
+<h3><span class="header-section-number">3.2.1</span> Charactères
 socio-démographiques de l’individu</h3>
 <pre class="r"><code>## eayy_A1: Sexe (enquête annuelle)
 coco1$sexe &lt;- fct_recode(
@@ -1592,8 +1616,8 @@ freq(coco1$couple, total= T, valid=F)</code></pre>
 ## Ne pas en couple         262  24.3
 ## Total                   1076 100.0</code></pre>
 </div>
-<div id="information-de-la-ménage" class="section level3" number="2.2.2">
-<h3><span class="header-section-number">2.2.2</span> Information de la
+<div id="information-de-la-ménage" class="section level3" number="3.2.2">
+<h3><span class="header-section-number">3.2.2</span> Information de la
 ménage</h3>
 <pre class="r"><code>## eayy_C1_rec: Nombre de personnes dans le foyer (recodage)
 freq(coco1$eayy_C1_rec, total= T, valid=F)</code></pre>
@@ -1622,8 +1646,8 @@ freq(coco1$enfants_cohabitation, total= T, valid=F)</code></pre>
 ## 9996                     1   0.1
 ## Total                 1076 100.0</code></pre>
 </div>
-<div id="les-sentiments" class="section level3" number="2.2.3">
-<h3><span class="header-section-number">2.2.3</span> Les sentiments</h3>
+<div id="les-sentiments" class="section level3" number="3.2.3">
+<h3><span class="header-section-number">3.2.3</span> Les sentiments</h3>
 <pre class="r"><code># Créer la fonction
 fct_freq_senti &lt;- function(x){
   recod &lt;- fct_collapse(factor(x),
@@ -1639,8 +1663,8 @@ coco1$nerveux &lt;- fct_freq_senti(coco1$coco1_q16)
 coco1$decourage &lt;- fct_freq_senti(coco1$coco1_q17)
 coco1$triste &lt;- fct_freq_senti(coco1$coco1_q19)</code></pre>
 </div>
-<div id="les-tâches" class="section level3" number="2.2.4">
-<h3><span class="header-section-number">2.2.4</span> Les tâches</h3>
+<div id="les-tâches" class="section level3" number="3.2.4">
+<h3><span class="header-section-number">3.2.4</span> Les tâches</h3>
 <p><strong>Fréquences des activités concernantes la vie sociale Pendant
 les deux dernières semaines</strong></p>
 <pre class="r"><code># Créer la fonction
@@ -1721,11 +1745,11 @@ exercices physiques / du sport</li>
 </div>
 </div>
 </div>
-<div id="résultat-produit-et-commentaires" class="section level1" number="3">
-<h1><span class="header-section-number">3</span> Résultat produit et
+<div id="résultat-produit-et-commentaires" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Résultat produit et
 commentaires</h1>
-<div id="la-repartition-des-tâches-selon-le-sexe" class="section level2" number="3.1">
-<h2><span class="header-section-number">3.1</span> La repartition des
+<div id="la-repartition-des-tâches-selon-le-sexe" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> La repartition des
 tâches selon le sexe</h2>
 <p>En croiser les activités sociales avec le sexe, on voit que les
 femmes sont plus nombreux à garder les contacts avec leur famille pour
@@ -1844,8 +1868,8 @@ fait.</strong></p>
 ##   Femme      1.8             100.0
 ##   Ensemble   1.0             100.0</code></pre>
 </div>
-<div id="le-profil-des-femmes-avec-le-plus-de-charge-mentale" class="section level2" number="3.2">
-<h2><span class="header-section-number">3.2</span> Le profil des femmes
+<div id="le-profil-des-femmes-avec-le-plus-de-charge-mentale" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Le profil des femmes
 avec le plus de charge mentale</h2>
 <p>Croiser avec</p>
 <ul>
@@ -1855,12 +1879,12 @@ avec le plus de charge mentale</h2>
 </ul>
 </div>
 </div>
-<div id="bibliographie" class="section level1" number="4">
-<h1><span class="header-section-number">4</span> Bibliographie</h1>
+<div id="bibliographie" class="section level1" number="5">
+<h1><span class="header-section-number">5</span> Bibliographie</h1>
 <p><a href="https://lejournal.cnrs.fr/nos-blogs/dialogues-economiques/la-charge-mentale-une-double-peine-pour-les-femmes" class="uri">https://lejournal.cnrs.fr/nos-blogs/dialogues-economiques/la-charge-mentale-une-double-peine-pour-les-femmes</a></p>
 </div>
-<div id="donnée-surpprimentaire" class="section level1" number="5">
-<h1><span class="header-section-number">5</span> Donnée
+<div id="donnée-surpprimentaire" class="section level1" number="6">
+<h1><span class="header-section-number">6</span> Donnée
 surpprimentaire</h1>
 <p><a href="https://www.data.gouv.fr/fr/pages/donnees-coronavirus/" class="uri">https://www.data.gouv.fr/fr/pages/donnees-coronavirus/</a></p>
 </div>
