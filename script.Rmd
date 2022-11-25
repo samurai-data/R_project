@@ -11,6 +11,11 @@ summary(data)
 
 # Sujet 
 Charge mentale ( des femmes?)
+
+Définition : la charge mentale entrait dans l’édition 2020 du Larousse, définie comme « poids psychologique que fait peser (plus particulièrement sur les femmes) la gestion des tâches domestiques et éducatives, engendrant une fatigue physique et, surtout, psychique ».
+
+"C'est devoir penser à tout, tout le temps, et pour tout le monde. C'est l'impression de devoir tout gérer, d'avoir l'impression aussi de devoir être parfait sur tous les fronts -sans réussir à tirer la sonnette d'alarme quand il faudrait- en pensant que tout repose sur ses propres épaules" détaille Laurence Bourgeois. 
+
 Carte graphique : en attendant
 
 # Télécharger les packages et les données
@@ -102,16 +107,6 @@ coco1$contacts_etr_collegues <- fct_freq_actvt(coco1$coco1_q53_3)
 ```
 
 ### Temps consacré pour les activités
-1 Je n’ai pas fait cette activité
-2 Entre 0 et 1 heure
-3 Entre 1 et 2 heures
-4 Entre 2 et 3 heures
-5 Entre 3 et 4 heures
-6 Entre 4 et 6 heures
-7 Entre 6 et 8 heures
-8 Entre 8 et 10 heures
-9 Plus de 10 heures
-9999 N'a pas répondu
 
 ```{r}
 fct_temps_actvt <- function(x){
@@ -173,8 +168,8 @@ coco1_q61_7: Temps consacré par rapport à l'habitude à : parler au téléphon
 coco1_q61_6: Temps consacré par rapport à l'habitude à : dormir
 coco1_q61_5: Temps consacré par rapport à l'habitude à : faire des exercices physiques / du sport
 
-## EXEMPLE DES RESULTATS
-### La repartition des tâches selon le sexe
+# EXEMPLE DES RESULTATS
+## La repartition des tâches selon le sexe
 
 En croiser les activités sociales avec le sexe, on voit que les femmes sont plus nombreux à garder les contacts avec leur famille pour donner les conseils, du confort. Elles les font plus souvent peut être pour exercer leur rôle de 'care giver' d'une femme selon les rapports sociaux de sexe. 
 
@@ -211,6 +206,7 @@ rprop(table(coco1$sexe, coco1$tache_1, exclude="9999"))
 
 
 # Bibliographie 
+https://lejournal.cnrs.fr/nos-blogs/dialogues-economiques/la-charge-mentale-une-double-peine-pour-les-femmes
 
 # Donnée surpprimentaire
 https://www.data.gouv.fr/fr/pages/donnees-coronavirus/
