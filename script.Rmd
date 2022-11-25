@@ -1,6 +1,6 @@
 ---
 title: "R_projet"
-author: "Inessa Kim"
+author: "Inessa Kim, Mai-Anh Pham, Nao Ueda"
 date: 'Dernière modif : `r format(Sys.Date(), format = "%d/%m/%Y")`'
 output:
   html_document:
@@ -9,6 +9,27 @@ output:
     toc_depth : '3' # Précision de la table des matières
     toc_float: true # Laisser la table des matières constamment
 ---
+# Rappel des consignes pour le dossier
+
+Il s’agira d’un dossier en groupe de 2 à 4 étudiant·es au choix à partir de données fournies et à rechercher autour d’une même thématique. Le dossier rendu sera :
+
+- un document (.odt, .pdf ou .html)
+- rédigé de 4 à 6 pages
+- à partir d’un fichier .Rmd
+- comportant au moins une carte
+- présentant des résultats pondérés
+- et au moins un test statistique.
+-> Vous m’enverrez le document produit et le script .Rmd au plus tard **le 03/01/23** à mon adresse mail cecile.rodrigues@univ-lille.fr (vous aurez un accusé de réception sous 24h).
+
+Attendus
+
+- Au moins 2 vagues de coco (conseil 1 et 6)
+- Résultats pondérés
+- Au moins un test statistique
+- Pas d’énumération de tests ou de tableaux sans réflexion, fil directeur et interprétation
+- Recherche de données géographiques pertinentes (voir data.gouv.fr)
+- Au moins une carte
+- Données transmises : coco - vague 1 à coco - vague 6, les autres vagues, fonds départements et communes
 
 # Présentation du sujet et de nos hypothèses sociologiques
 Sujet : La charge mentale ( des femmes?) face au Covid
@@ -28,10 +49,15 @@ library(readr)
 library(knitr)
 library(kableExtra)
 ```
-*Les données : coco1 et ??*
+*Les données : coco1 et coco6*
 ```{r}
-coco1 <- read_csv("fr.cdsp.ddi.elipss.202004coco1.csv")
+coco1 <- read.csv("fr.cdsp.ddi.elipss.202004coco1.csv")
 ```
+
+```{r}
+coco6 <- read.csv("fr.cdsp.ddi.elipss.202010.csv")
+```
+
 ## Choisir les variables
 
 ### Charactères socio-démographiques de l'individu 
