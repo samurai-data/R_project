@@ -1,16 +1,17 @@
 ---
 title: "R_projet"
 author: "Inessa Kim"
-date: 'Dernière modification : `r format(Sys.Date(), format="%d/%m/%Y")`
-output: html_document
+date: 'Dernière modif : `r format(Sys.Date(), format = "%d/%m/%Y")`'
+output:
+  html_document:
+    number_sections: yes # pour ajouter des numéros aux titres
+    toc: yes # ajout d'une table des matières
+    toc_depth : '3' # Précision de la table des matières
+    toc_float: true # Laisser la table des matières constamment
 ---
-```{r}
-summary(data)
-```
 
-
-# Sujet 
-Charge mentale ( des femmes?)
+# Présentation du sujet et de nos hypothèses sociologiques
+Sujet : La charge mentale ( des femmes?) face au Covid
 
 Définition : la charge mentale entrait dans l’édition 2020 du Larousse, définie comme « poids psychologique que fait peser (plus particulièrement sur les femmes) la gestion des tâches domestiques et éducatives, engendrant une fatigue physique et, surtout, psychique ».
 
@@ -18,20 +19,22 @@ Définition : la charge mentale entrait dans l’édition 2020 du Larousse, déf
 
 Carte graphique : en attendant
 
-# Télécharger les packages et les données
-*Les packages : tidyverse et questionr*
+# Historique des étapes sur R
+## Télécharger les packages
 ```{r}
 library(tidyverse)
 library(questionr)
 library(readr)
+library(knitr)
+library(kableExtra)
 ```
 *Les données : coco1 et ??*
 ```{r}
 coco1 <- read_csv("fr.cdsp.ddi.elipss.202004coco1.csv")
 ```
-# Choisir les variables
+## Choisir les variables
 
-## Variables démographiques de l'individu : Sexe, Age, Vit en couple, Niveau d'études
+### Charactères socio-démographiques de l'individu 
 ```{r}
 ## eayy_A1: Sexe (enquête annuelle)
 coco1$sexe <- fct_recode(
@@ -58,7 +61,7 @@ coco1$couple <- fct_recode(factor(coco1$eayy_A5),
   "Ne pas en couple"="3")
 freq(coco1$couple, total= T, valid=F)
 ```
-## Information de la ménage 
+### Information de la ménage 
 ```{r}
 ## eayy_C1_rec: Nombre de personnes dans le foyer (recodage)
 freq(coco1$eayy_C1_rec, total= T, valid=F)
@@ -74,18 +77,29 @@ coco1$enfants_cohabitation <- fct_recode(factor(coco1$eayy_C8B_rec),
 freq(coco1$enfants_cohabitation, total= T, valid=F)
 ```
 
-## Variables des tâches *à appliquer les fonctions*: 
-### Fréquences des activités concernantes la vie sociale Pendant les deux dernières semaines
+### Les sentiments
+```{r}
+# Créer la fonction
+fct_freq_senti <- function(x){
+  recod <- fct_collapse(factor(x),
+  "En permanence"="1", 
+  "Souvent"="2", 
+  "Quelques fois"="3",
+  "Rarement"="4",
+  "Jamais" = "5")
+  return(recod)
+}
+# Recodage
+coco1$nerveux <- fct_freq_senti(coco1$coco1_q16)
+coco1$decourage <- fct_freq_senti(coco1$coco1_q17)
+coco1$triste <- fct_freq_senti(coco1$coco1_q19)
+```
 
-1 8 fois ou plus
-2 Entre 5 et 7 fois
-3 3 ou 4 fois
-4 1 ou 2 fois
-5 Jamais
-6 Non concerné(e)
-9999 N'a pas répondu
+### Les tâches
+**Fréquences des activités concernantes la vie sociale Pendant les deux dernières semaines**
 
 ```{r}
+# Créer la fonction
 fct_freq_actvt <- function(x){
   recod <- fct_collapse(factor(x),
   "8 fois ou plus"="1", 
@@ -95,19 +109,21 @@ fct_freq_actvt <- function(x){
   "Jamais" = "5")
   return(recod)
 }
-## Rencontres les amis ou famille, dans la vie réelle ou virtuelle
+# Recodage
+# Rencontres les amis ou famille, dans la vie réelle ou virtuelle
 coco1$rencontres_amis_reel <- fct_freq_actvt(coco1$coco1_q52_1)
 coco1$rencontres_amis_vir <- fct_freq_actvt(coco1$coco1_q52_2)
 coco1$rencontres_famille_reel <- fct_freq_actvt(coco1$coco1_q52_3)
 coco1$rencontres_famille_vir <- fct_freq_actvt(coco1$coco1_q52_4)
-## Contacts avec la famille, des amis, des collègues à l'étranger
+# Contacts avec la famille, des amis, des collègues à l'étranger
 coco1$contacts_etr_famille <- fct_freq_actvt(coco1$coco1_q53_1)
 coco1$contacts_etr_amis <- fct_freq_actvt(coco1$coco1_q53_2)
 coco1$contacts_etr_collegues <- fct_freq_actvt(coco1$coco1_q53_3)
 ```
 
-### Temps consacré pour les activités
+**Temps consacré pour les activités**
 
+Fonction
 ```{r}
 fct_temps_actvt <- function(x){
   recod <- fct_collapse(factor(x),
@@ -126,84 +142,85 @@ fct_temps_actvt <- function(x){
 
 Recodage
 ```{r}
+# faire du ménage
 coco1$tache_1 <- fct_temps_actvt(coco1$coco1_q59_1)
+# s’occuper de ses enfants
 coco1$tache_2 <- fct_temps_actvt(coco1$coco1_q59_2)
+# prendre soin de personnes fragiles
 coco1$tache_3 <- fct_temps_actvt(coco1$coco1_q59_3)
+# exercer son activité professionnelle
 coco1$tache_4 <- fct_temps_actvt(coco1$coco1_q59_4)
+# faire des exercices physiques / du sport
 coco1$tache_5 <- fct_temps_actvt(coco1$coco1_q59_5)
+# dormir
 coco1$tache_6 <- fct_temps_actvt(coco1$coco1_q59_6)
+# parler au téléphone
 coco1$tache_7 <- fct_temps_actvt(coco1$coco1_q59_7)
 
 ```
 
-```{r}
-freq(coco1$tache_3)
-```
+**Temps consacré pour les activités par rapport à l'habitude**
+
+- 1 Beaucoup moins que d’habitude
+- 2 Un peu moins que d’habitude 
+- 3 Autant que d’habitude 
+- 4 Un peu plus que d’habitude
+- 5 Beaucoup plus que d’habitude
+- 6 Non concerné(e)
+- 9999 N'a pas répondu
 
 *Les tâches*
-coco1_q59_1: Temps consacré à : faire du ménage
-coco1_q59_2: Temps consacré à : s’occuper de ses enfants
-coco1_q59_3: Temps consacré à : prendre soin de personnes fragiles ou vulnérables
-coco1_q59_4: Temps consacré à : exercer son activité professionnelle
-coco1_q59_7: Temps consacré à : parler au téléphone
-*Se reposer*
-coco1_q59_6: Temps consacré à : dormir
-coco1_q59_5: Temps consacré à : faire des exercices physiques / du sport
 
-### Temps consacré pour les activités par rapport à l'habitude
-1 Beaucoup moins que d’habitude
-2 Un peu moins que d’habitude 
-3 Autant que d’habitude 
-4 Un peu plus que d’habitude
-5 Beaucoup plus que d’habitude
-6 Non concerné(e)
-9999 N'a pas répondu
+- coco1_q61_1: Temps consacré par rapport à l'habitude à : faire du ménage
+- coco1_q61_2: Temps consacré par rapport à l'habitude à : s’occuper - de ses enfants
+- coco1_q61_3: Temps consacré par rapport à l'habitude à : prendre soin de personnes fragiles ou vulnérables
+- coco1_q61_7: Temps consacré par rapport à l'habitude à : parler au téléphone
+- coco1_q61_6: Temps consacré par rapport à l'habitude à : dormir
+- coco1_q61_5: Temps consacré par rapport à l'habitude à : faire des exercices physiques / du sport
 
-*Les tâches*
-coco1_q61_1: Temps consacré par rapport à l'habitude à : faire du ménage
-coco1_q61_2: Temps consacré par rapport à l'habitude à : s’occuper de ses enfants
-coco1_q61_3: Temps consacré par rapport à l'habitude à : prendre soin de personnes fragiles ou vulnérables
-coco1_q61_7: Temps consacré par rapport à l'habitude à : parler au téléphone
-*Se reposer*
-coco1_q61_6: Temps consacré par rapport à l'habitude à : dormir
-coco1_q61_5: Temps consacré par rapport à l'habitude à : faire des exercices physiques / du sport
-
-# EXEMPLE DES RESULTATS
+# Résultat produit et commentaires
 ## La repartition des tâches selon le sexe
 
 En croiser les activités sociales avec le sexe, on voit que les femmes sont plus nombreux à garder les contacts avec leur famille pour donner les conseils, du confort. Elles les font plus souvent peut être pour exercer leur rôle de 'care giver' d'une femme selon les rapports sociaux de sexe. 
 
-*La frequence des rencontres avec la famille dans la vraie vie selon sexe*
+**La frequence des rencontres avec la famille dans la vraie vie selon sexe**
 ```{r}
 lprop(table(coco1$sexe, coco1$rencontres_famille_reel, exclude="9999"))
 ```
 
-*La frequence des rencontres avec la famille dans la vie virtuelle selon sexe*
+**La frequence des rencontres avec la famille dans la vie virtuelle selon sexe**
 
 ```{r}
 lprop(table(coco1$sexe, coco1$rencontres_famille_vir, exclude="9999"))
 ```
-*La frequence des contacts avec la famille à l'étranger selon sexe*
+**La frequence des contacts avec la famille à l'étranger selon sexe**
 ```{r}
 lprop(table(coco1$sexe, coco1$contacts_etr_famille, exclude="6"))
 ```
 
-*Le temps consacré à faire les activités*
-Les femmes consacrent plus de temps à prendre soins de personnes fragiles ou vulnérables
+
+**Les femmes consacrent plus de temps à prendre soins de personnes fragiles ou vulnérables**
 ```{r}
 rprop(table(coco1$sexe, coco1$tache_3, exclude="9999"))
 ```
 
-Les femmes passent plus de temps à s'occuper des enfants : 13,3 % des femmes consacrent plus de 6h par jour contre 5 % des hommes
+**Les femmes passent plus de temps à s'occuper des enfants : 13,3 % des femmes consacrent plus de 6h par jour contre 5 % des hommes**
 
 ```{r}
 rprop(table(coco1$sexe, coco1$tache_2, exclude="9999"))
 ```
-Tâches ménagères : 22,3 % des femmes passent plus de 2h à faire les tâches ménagères contre 10,2 % des hommes au cours de 2 dernières semaines. Il y a même 15 % des hommes qui ne l'ont pas fait.
+**Tâches ménagères : 22,3 % des femmes passent plus de 2h à faire les tâches ménagères contre 10,2 % des hommes au cours de 2 dernières semaines. Il y a même 15 % des hommes qui ne l'ont pas fait.**
 ```{r}
 rprop(table(coco1$sexe, coco1$tache_1, exclude="9999"))
 ```
 
+## Le profil des femmes avec le plus de charge mentale
+
+Croiser avec 
+
+- la situation conjugale (en couple ou pas) 
+- l'information du ménage (vit avec qui)
+- position professionnelle d'elle et de son conjoint
 
 # Bibliographie 
 https://lejournal.cnrs.fr/nos-blogs/dialogues-economiques/la-charge-mentale-une-double-peine-pour-les-femmes
