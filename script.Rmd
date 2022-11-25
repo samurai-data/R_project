@@ -100,30 +100,6 @@ coco1$contacts_etr_famille <- fct_freq_actvt(coco1$coco1_q53_1)
 coco1$contacts_etr_amis <- fct_freq_actvt(coco1$coco1_q53_2)
 coco1$contacts_etr_collegues <- fct_freq_actvt(coco1$coco1_q53_3)
 ```
-```{r}
-## La fréquences des rencontres
-freq(coco1$rencontres_amis_reel)
-freq(coco1$rencontres_amis_vir)
-freq(coco1$rencontres_famille_reel)
-freq(coco1$rencontres_famille_vir)
-```
-Croiser avec le sexe
-
-*La frequence des rencontres avec la famille dans la vraie vie selon sexe*
-```{r}
-lprop(table(coco1$sexe, coco1$rencontres_famille_reel, exclude="9999"))
-```
-
-*La frequence des rencontres avec la famille dans la vie virtuelle selon sexe*
-=> au cours de 2 semaines dernières, les hommes sont plus nombreux à jamais contacter leur famille, et moins nombreux à le faire plus de 4 fois
-```{r}
-lprop(table(coco1$sexe, coco1$rencontres_famille_vir, exclude="9999"))
-```
-*La frequence des contacts avec la famille à l'étranger selon sexe*
-```{r}
-lprop(table(coco1$sexe, coco1$contacts_etr_famille, exclude="6"))
-```
-
 
 ### Temps consacré pour les activités
 1 Je n’ai pas fait cette activité
@@ -137,10 +113,43 @@ lprop(table(coco1$sexe, coco1$contacts_etr_famille, exclude="6"))
 9 Plus de 10 heures
 9999 N'a pas répondu
 
+```{r}
+fct_temps_actvt <- function(x){
+  recod <- fct_collapse(factor(x),
+  "Je n’ai pas fait cette activité"="1", 
+  "Entre 0 et 1 heure"="2", 
+  "Entre 1 et 2 heures"="3",
+  "Entre 2 et 3 heures"="4",
+  "Entre 3 et 4 heures"="5",
+  "Entre 4 et 6 heures"="6",
+  "Entre 6 et 8 heures"="7",
+  "Entre 8 et 10 heures"="8",
+  "Plus de 10 heures" = "9")
+  return(recod)
+}
+```
+
+Recodage
+```{r}
+coco1$tache_1 <- fct_temps_actvt(coco1$coco1_q59_1)
+coco1$tache_2 <- fct_temps_actvt(coco1$coco1_q59_2)
+coco1$tache_3 <- fct_temps_actvt(coco1$coco1_q59_3)
+coco1$tache_4 <- fct_temps_actvt(coco1$coco1_q59_4)
+coco1$tache_5 <- fct_temps_actvt(coco1$coco1_q59_5)
+coco1$tache_6 <- fct_temps_actvt(coco1$coco1_q59_6)
+coco1$tache_7 <- fct_temps_actvt(coco1$coco1_q59_7)
+
+```
+
+```{r}
+freq(coco1$tache_3)
+```
+
 *Les tâches*
 coco1_q59_1: Temps consacré à : faire du ménage
 coco1_q59_2: Temps consacré à : s’occuper de ses enfants
 coco1_q59_3: Temps consacré à : prendre soin de personnes fragiles ou vulnérables
+coco1_q59_4: Temps consacré à : exercer son activité professionnelle
 coco1_q59_7: Temps consacré à : parler au téléphone
 *Se reposer*
 coco1_q59_6: Temps consacré à : dormir
@@ -163,6 +172,42 @@ coco1_q61_7: Temps consacré par rapport à l'habitude à : parler au téléphon
 *Se reposer*
 coco1_q61_6: Temps consacré par rapport à l'habitude à : dormir
 coco1_q61_5: Temps consacré par rapport à l'habitude à : faire des exercices physiques / du sport
+
+## EXEMPLE DES RESULTATS
+### La repartition des tâches selon le sexe
+
+En croiser les activités sociales avec le sexe, on voit que les femmes sont plus nombreux à garder les contacts avec leur famille pour donner les conseils, du confort. Elles les font plus souvent peut être pour exercer leur rôle de 'care giver' d'une femme selon les rapports sociaux de sexe. 
+
+*La frequence des rencontres avec la famille dans la vraie vie selon sexe*
+```{r}
+lprop(table(coco1$sexe, coco1$rencontres_famille_reel, exclude="9999"))
+```
+
+*La frequence des rencontres avec la famille dans la vie virtuelle selon sexe*
+
+```{r}
+lprop(table(coco1$sexe, coco1$rencontres_famille_vir, exclude="9999"))
+```
+*La frequence des contacts avec la famille à l'étranger selon sexe*
+```{r}
+lprop(table(coco1$sexe, coco1$contacts_etr_famille, exclude="6"))
+```
+
+*Le temps consacré à faire les activités*
+Les femmes consacrent plus de temps à prendre soins de personnes fragiles ou vulnérables
+```{r}
+rprop(table(coco1$sexe, coco1$tache_3, exclude="9999"))
+```
+
+Les femmes passent plus de temps à s'occuper des enfants : 13,3 % des femmes consacrent plus de 6h par jour contre 5 % des hommes
+
+```{r}
+rprop(table(coco1$sexe, coco1$tache_2, exclude="9999"))
+```
+Tâches ménagères : 22,3 % des femmes passent plus de 2h à faire les tâches ménagères contre 10,2 % des hommes au cours de 2 dernières semaines. Il y a même 15 % des hommes qui ne l'ont pas fait.
+```{r}
+rprop(table(coco1$sexe, coco1$tache_1, exclude="9999"))
+```
 
 
 # Bibliographie 
