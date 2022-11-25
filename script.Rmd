@@ -26,7 +26,7 @@ coco1 <- read_csv("fr.cdsp.ddi.elipss.202004coco1.csv")
 ```
 # Choisir les variables
 
-## Variables démographique : Sexe, Age, Vit en couple, Niveau d'études
+## Variables démographiques de l'individu : Sexe, Age, Vit en couple, Niveau d'études
 ```{r}
 ## eayy_A1: Sexe (enquête annuelle)
 coco1$sexe <- fct_recode(
@@ -53,6 +53,117 @@ coco1$couple <- fct_recode(factor(coco1$eayy_A5),
   "Ne pas en couple"="3")
 freq(coco1$couple, total= T, valid=F)
 ```
+## Information de la ménage 
+```{r}
+## eayy_C1_rec: Nombre de personnes dans le foyer (recodage)
+freq(coco1$eayy_C1_rec, total= T, valid=F)
+```
+```{r}
+## eayy_C8B_rec: Nombre d'enfants cohabitants (recodage)
+coco1$enfants_cohabitation <- fct_recode(factor(coco1$eayy_C8B_rec),
+  "0 enfant"="1", 
+  "1 enfant"="2", 
+  "2 enfants"="3",
+  "3 enfants ou plus"="4",
+  "Ne pas avoir d'enfant" = "6")
+freq(coco1$enfants_cohabitation, total= T, valid=F)
+```
+
+## Variables des tâches *à appliquer les fonctions*: 
+### Fréquences des activités concernantes la vie sociale Pendant les deux dernières semaines
+
+1 8 fois ou plus
+2 Entre 5 et 7 fois
+3 3 ou 4 fois
+4 1 ou 2 fois
+5 Jamais
+6 Non concerné(e)
+9999 N'a pas répondu
+
+```{r}
+fct_freq_actvt <- function(x){
+  recod <- fct_collapse(factor(x),
+  "8 fois ou plus"="1", 
+  "Entre 5 et 7 fois"="2", 
+  "3 ou 4 fois"="3",
+  "1 ou 2 fois"="4",
+  "Jamais" = "5")
+  return(recod)
+}
+## Rencontres les amis ou famille, dans la vie réelle ou virtuelle
+coco1$rencontres_amis_reel <- fct_freq_actvt(coco1$coco1_q52_1)
+coco1$rencontres_amis_vir <- fct_freq_actvt(coco1$coco1_q52_2)
+coco1$rencontres_famille_reel <- fct_freq_actvt(coco1$coco1_q52_3)
+coco1$rencontres_famille_vir <- fct_freq_actvt(coco1$coco1_q52_4)
+## Contacts avec la famille, des amis, des collègues à l'étranger
+coco1$contacts_etr_famille <- fct_freq_actvt(coco1$coco1_q53_1)
+coco1$contacts_etr_amis <- fct_freq_actvt(coco1$coco1_q53_2)
+coco1$contacts_etr_collegues <- fct_freq_actvt(coco1$coco1_q53_3)
+```
+```{r}
+## La fréquences des rencontres
+freq(coco1$rencontres_amis_reel)
+freq(coco1$rencontres_amis_vir)
+freq(coco1$rencontres_famille_reel)
+freq(coco1$rencontres_famille_vir)
+```
+Croiser avec le sexe
+
+*La frequence des rencontres avec la famille dans la vraie vie selon sexe*
+```{r}
+lprop(table(coco1$sexe, coco1$rencontres_famille_reel, exclude="9999"))
+```
+
+*La frequence des rencontres avec la famille dans la vie virtuelle selon sexe*
+=> au cours de 2 semaines dernières, les hommes sont plus nombreux à jamais contacter leur famille, et moins nombreux à le faire plus de 4 fois
+```{r}
+lprop(table(coco1$sexe, coco1$rencontres_famille_vir, exclude="9999"))
+```
+*La frequence des contacts avec la famille à l'étranger selon sexe*
+```{r}
+lprop(table(coco1$sexe, coco1$contacts_etr_famille, exclude="6"))
+```
+
+
+### Temps consacré pour les activités
+1 Je n’ai pas fait cette activité
+2 Entre 0 et 1 heure
+3 Entre 1 et 2 heures
+4 Entre 2 et 3 heures
+5 Entre 3 et 4 heures
+6 Entre 4 et 6 heures
+7 Entre 6 et 8 heures
+8 Entre 8 et 10 heures
+9 Plus de 10 heures
+9999 N'a pas répondu
+
+*Les tâches*
+coco1_q59_1: Temps consacré à : faire du ménage
+coco1_q59_2: Temps consacré à : s’occuper de ses enfants
+coco1_q59_3: Temps consacré à : prendre soin de personnes fragiles ou vulnérables
+coco1_q59_7: Temps consacré à : parler au téléphone
+*Se reposer*
+coco1_q59_6: Temps consacré à : dormir
+coco1_q59_5: Temps consacré à : faire des exercices physiques / du sport
+
+### Temps consacré pour les activités par rapport à l'habitude
+1 Beaucoup moins que d’habitude
+2 Un peu moins que d’habitude 
+3 Autant que d’habitude 
+4 Un peu plus que d’habitude
+5 Beaucoup plus que d’habitude
+6 Non concerné(e)
+9999 N'a pas répondu
+
+*Les tâches*
+coco1_q61_1: Temps consacré par rapport à l'habitude à : faire du ménage
+coco1_q61_2: Temps consacré par rapport à l'habitude à : s’occuper de ses enfants
+coco1_q61_3: Temps consacré par rapport à l'habitude à : prendre soin de personnes fragiles ou vulnérables
+coco1_q61_7: Temps consacré par rapport à l'habitude à : parler au téléphone
+*Se reposer*
+coco1_q61_6: Temps consacré par rapport à l'habitude à : dormir
+coco1_q61_5: Temps consacré par rapport à l'habitude à : faire des exercices physiques / du sport
+
 
 # Bibliographie 
 
