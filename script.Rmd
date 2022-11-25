@@ -1,7 +1,7 @@
 ---
 title: "R_projet"
 author: "Inessa Kim"
-date: "2022-11-24"
+date: 'Dernière modification : `r format(Sys.Date(), format="%d/%m/%Y")`
 output: html_document
 ---
 ```{r}
@@ -12,6 +12,18 @@ summary(data)
 # Sujet 
 Charge mentale ( des femmes?)
 Carte graphique : en attendant
+
+# Télécharger les packages et les données
+*Les packages : tidyverse et questionr*
+```{r}
+library(tidyverse)
+library(questionr)
+library(readr)
+```
+*Les données : coco1 et ??*
+```{r}
+coco1 <- read_csv("fr.cdsp.ddi.elipss.202004coco1.csv")
+```
 
 # Bibliographie 
 
