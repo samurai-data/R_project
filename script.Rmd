@@ -24,6 +24,35 @@ library(readr)
 ```{r}
 coco1 <- read_csv("fr.cdsp.ddi.elipss.202004coco1.csv")
 ```
+# Choisir les variables
+
+## Variables démographique : Sexe, Age, Vit en couple, Niveau d'études
+```{r}
+## eayy_A1: Sexe (enquête annuelle)
+coco1$sexe <- fct_recode(
+  factor(coco1$eayy_A1),
+  "Homme"="1", "Femme"="2")
+freq(coco1$sexe, total= T, valid=F)
+```
+```{r}
+## eayy_A2A_rec: Age quinquennal (recodage) à 2018
+coco1$age <- fct_recode(factor(coco1$eayy_A2A_rec),
+  "Moins de 24"="4", "De 25 à 29 ans"="5", 
+  "De 30 à 34 ans"="6", "De 35 à 39 ans"="7",
+  "De 40 à 44 ans"="8", "De 45 à 49 ans"="9",
+  "De 50 à 54 ans"="10", "De 55 à 59 ans"="11",
+  "De 60 à 64 ans"="12", "De 65 à 69 ans"="13",
+  "70 ans et plus"="14")
+freq(coco1$age, total= T, valid=F)
+```
+```{r}
+## eayy_A5: Vit en couple
+coco1$couple <- fct_recode(factor(coco1$eayy_A5),
+  "Couple cohabitation"="1", 
+  "Couple non-cohabitation"="2", 
+  "Ne pas en couple"="3")
+freq(coco1$couple, total= T, valid=F)
+```
 
 # Bibliographie 
 
