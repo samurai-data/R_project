@@ -1486,22 +1486,22 @@ border-radius: 0px;
 
 <h1 class="title toc-ignore">R_projet</h1>
 <h4 class="author">Inessa Kim, Mai-Anh Pham, Nao Ueda</h4>
-<h4 class="date">Dernière modif : 25/11/2022</h4>
+<h4 class="date">Dernière modif : 29/11/2022</h4>
 
 </div>
 
 
-<div id="rappel-des-consignes-pour-le-dossier" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> Rappel des consignes
-pour le dossier</h1>
+<div id="checklist---rappel-des-consignes-pour-le-dossier" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Checklist - Rappel des
+consignes pour le dossier</h1>
 <p>Il s’agira d’un dossier en groupe de 2 à 4 étudiant·es au choix à
 partir de données fournies et à rechercher autour d’une même thématique.
 Le dossier rendu sera :</p>
 <ul>
-<li>un document (.odt, .pdf ou .html)</li>
+<li>(OK) un document (.odt, .pdf ou <strong>.html</strong>)</li>
 <li>rédigé de 4 à 6 pages</li>
-<li>à partir d’un fichier .Rmd</li>
-<li>comportant au moins une carte</li>
+<li>(OK) à partir d’un fichier .Rmd</li>
+<li>(OK) comportant au moins une carte</li>
 <li>présentant des résultats pondérés</li>
 <li>et au moins un test statistique. -&gt; Vous m’enverrez le document
 produit et le script .Rmd au plus tard <strong>le 03/01/23</strong> à
@@ -1525,7 +1525,7 @@ vagues, fonds départements et communes</li>
 <div id="présentation-du-sujet-et-de-nos-hypothèses-sociologiques" class="section level1" number="2">
 <h1><span class="header-section-number">2</span> Présentation du sujet
 et de nos hypothèses sociologiques</h1>
-<p>Sujet : La charge mentale ( des femmes?) face au Covid</p>
+<p>Sujet : La charge mentale des femmes face au Covid</p>
 <p>Définition : la charge mentale entrait dans l’édition 2020 du
 Larousse, définie comme « poids psychologique que fait peser (plus
 particulièrement sur les femmes) la gestion des tâches domestiques et
@@ -1536,7 +1536,80 @@ C’est l’impression de devoir tout gérer, d’avoir l’impression aussi de
 devoir être parfait sur tous les fronts -sans réussir à tirer la
 sonnette d’alarme quand il faudrait- en pensant que tout repose sur ses
 propres épaules” détaille Laurence Bourgeois.</p>
-<p>Carte graphique : en attendant</p>
+<p>Références : <a href="https://www.europarl.europa.eu/RegData/etudes/BRIE/2022/719547/IPOL_BRI(2022)719547_FR.pdf" class="uri">https://www.europarl.europa.eu/RegData/etudes/BRIE/2022/719547/IPOL_BRI(2022)719547_FR.pdf</a>
+<a href="https://lejournal.cnrs.fr/nos-blogs/dialogues-economiques/la-charge-mentale-une-double-peine-pour-les-femmes" class="uri">https://lejournal.cnrs.fr/nos-blogs/dialogues-economiques/la-charge-mentale-une-double-peine-pour-les-femmes</a>
+<a href="https://start.lesechos.fr/societe/egalite-diversite/charge-mentale-le-travail-domestique-des-meres-a-double-pendant-la-crise-selon-le-bcg-1295877" class="uri">https://start.lesechos.fr/societe/egalite-diversite/charge-mentale-le-travail-domestique-des-meres-a-double-pendant-la-crise-selon-le-bcg-1295877</a>
+<a href="https://www.lecrsa.ca/wp-content/uploads/2022/04/RAPPORT_Charge-mentale_F_P-S.pdf" class="uri">https://www.lecrsa.ca/wp-content/uploads/2022/04/RAPPORT_Charge-mentale_F_P-S.pdf</a>
+<a href="https://www.francetvinfo.fr/sante/maladie/coronavirus/il-ne-sait-pas-ce-que-c-est-que-de-gerer-les-enfants-a-la-maison-avec-le-covid-19-la-charge-mentale-pese-plus-lourd-sur-les-femmes_4328609.html" class="uri">https://www.francetvinfo.fr/sante/maladie/coronavirus/il-ne-sait-pas-ce-que-c-est-que-de-gerer-les-enfants-a-la-maison-avec-le-covid-19-la-charge-mentale-pese-plus-lourd-sur-les-femmes_4328609.html</a></p>
+<div id="carte-graphique" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Carte graphique
+:</h2>
+<p>Données : <a href="https://www.data.gouv.fr/fr/datasets/chiffres-cles-concernant-lepidemie-de-covid19-en-france/" class="uri">https://www.data.gouv.fr/fr/datasets/chiffres-cles-concernant-lepidemie-de-covid19-en-france/</a>
+Fond de carte : fichier sous zip</p>
+</div>
+<div id="données-nécessaires-et-variables-pertinentes---suggestion" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> Données nécessaires
+et variables pertinentes - suggestion</h2>
+<ul>
+<li>Caratèristique socio-démograpghie de l’individu
+<ul>
+<li>Age décennal en 7 classes : cal_AGE1</li>
+<li>Sexe : eayy_A1</li>
+<li>Niveau de formation du I au VI (rép+conj) : eayy_B18C et
+eayy_B18CCJT</li>
+<li>En activité : oui/non (rép+conj) : eayy_B1B et eayy_B1BCJT</li>
+<li>Groupe socioprofessionnel en 6 postes (rép+conj) : eayy_PCS6 et
+eayy_PCS6CJT</li>
+</ul></li>
+<li>Information du ménage
+<ul>
+<li>Type de ménage, 5 types (une seule personne/ monoparentale/ couple
+sans/ avec enfant/ complexe) : eayy_TYPMEN5</li>
+<li>Nombre d’enfants cohabitants (0/1/2/3+/Non concerné) :
+eayy_C8B_rec</li>
+<li>area &gt;=25 m2 par personne (oui/non) : coco1_q26</li>
+<li>Revenu mensuel par unité de consommation en 10 classes :
+eayy_E2AUC</li>
+</ul></li>
+<li>L’impact du télétravail et du confinement
+<ul>
+<li>Les sentiments négatifs (nerveux : Q16, découragé : Q17, triste :
+Q19), sentiment de solitude : eayy_F4</li>
+<li>Avis sur quotidien : journées denses : coco6_Q200_2 et stresse
+intense : coco6_Q200_4</li>
+<li>Avis télétravail : permet de se concentrer : coco6_Q132_2, mélange
+trop vie privée et vie professionnelle : coco6_Q132_3</li>
+<li>coco6_Q62mod: Expérience du confinement</li>
+<li>coco6_Q25: Tensions au sein du ménage</li>
+</ul></li>
+<li>La division des tâches domestiques actuellement
+(toujours/souvent/parfois/jamais)
+<ul>
+<li>coco6_q135_1: Se charge de la cuisine ego, coco6_q135_2:
+conjoint.e</li>
+<li>coco6_q136_1: Se charge des courses ego, coco6_q136_2:
+conjoint.e</li>
+<li>coco6_q137_1: Se charge de la lessive ego, coco6_q137_2:
+conjoint.e</li>
+</ul></li>
+<li>Les tâches fait par répondant
+<ul>
+<li>coco6_Q51: Fréquence de la surveillance des travaux scolaires des
+enfants</li>
+<li>coco6_q59_2: Temps consacré à : s’occuper de ses enfants</li>
+<li>coco6_q59_3: Temps consacré à : prendre soin de personnes fragiles
+ou vulnérables</li>
+<li>coco6_q59_4: Temps consacré à : exercer son activité
+professionnelle</li>
+</ul></li>
+<li>Les activités recréatives ou reposantes
+<ul>
+<li>coco6_q59_5: Temps consacré à : faire des exercices physiques / du
+sport</li>
+<li>coco6_q59_6: Temps consacré à : dormir</li>
+</ul></li>
+</ul>
+</div>
 </div>
 <div id="historique-des-étapes-sur-r" class="section level1" number="3">
 <h1><span class="header-section-number">3</span> Historique des étapes
