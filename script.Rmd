@@ -16,7 +16,7 @@ Il s’agira d’un dossier en groupe de 2 à 4 étudiant·es au choix à partir
 - un document (.odt, .pdf ou .html)
 - rédigé de 4 à 6 pages
 - à partir d’un fichier .Rmd
-- comportant au moins une carte
+- (OK) comportant au moins une carte
 - présentant des résultats pondérés
 - et au moins un test statistique.
 -> Vous m’enverrez le document produit et le script .Rmd au plus tard **le 03/01/23** à mon adresse mail cecile.rodrigues@univ-lille.fr (vous aurez un accusé de réception sous 24h).
@@ -38,7 +38,9 @@ Définition : la charge mentale entrait dans l’édition 2020 du Larousse, déf
 
 "C'est devoir penser à tout, tout le temps, et pour tout le monde. C'est l'impression de devoir tout gérer, d'avoir l'impression aussi de devoir être parfait sur tous les fronts -sans réussir à tirer la sonnette d'alarme quand il faudrait- en pensant que tout repose sur ses propres épaules" détaille Laurence Bourgeois. 
 
-Carte graphique : en attendant
+Carte graphique : 
+Données :
+Fond de carte :
 
 # Historique des étapes sur R
 ## Télécharger les packages
