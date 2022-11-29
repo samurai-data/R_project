@@ -13,7 +13,7 @@ output:
 
 Il s’agira d’un dossier en groupe de 2 à 4 étudiant·es au choix à partir de données fournies et à rechercher autour d’une même thématique. Le dossier rendu sera :
 
-- (OK) un document (.odt, .pdf ou .html)
+- (OK) un document (.odt, .pdf ou **.html**)
 - rédigé de 4 à 6 pages
 - (OK) à partir d’un fichier .Rmd
 - (OK) comportant au moins une carte
@@ -49,7 +49,7 @@ https://www.francetvinfo.fr/sante/maladie/coronavirus/il-ne-sait-pas-ce-que-c-es
 Données : https://www.data.gouv.fr/fr/datasets/chiffres-cles-concernant-lepidemie-de-covid19-en-france/
 Fond de carte : fichier sous zip
 
-## Données nécessaires et variables pertinentes 
+## Données nécessaires et variables pertinentes - suggestion 
 - Caratèristique socio-démograpghie de l'individu
   + Age décennal en 7 classes : cal_AGE1
   + Sexe : eayy_A1
@@ -62,10 +62,9 @@ Fond de carte : fichier sous zip
   + area >=25 m2 par personne (oui/non) : coco1_q26
   + Revenu mensuel par unité de consommation en 10 classes : eayy_E2AUC
 - L'impact du télétravail et du confinement
-  + Les sentiments : 
-  + Avis sur quotidien : journées denses et stresse intense : coco6_Q200_2 et coco6_Q200_4
-  + Avis télétravail : permet de se concentrer et mélange trop vie privée et vie
-professionnelle : coco6_Q132_2 et coco6_Q132_3
+  + Les sentiments négatifs (nerveux : Q16, découragé : Q17, triste : Q19), sentiment de solitude : eayy_F4 
+  + Avis sur quotidien : journées denses : coco6_Q200_2 et stresse intense : coco6_Q200_4
+  + Avis télétravail : permet de se concentrer : coco6_Q132_2, mélange trop vie privée et vie professionnelle : coco6_Q132_3
   + coco6_Q62mod: Expérience du confinement
   + coco6_Q25: Tensions au sein du ménage
 - La division des tâches domestiques actuellement (toujours/souvent/parfois/jamais)
@@ -74,6 +73,12 @@ professionnelle : coco6_Q132_2 et coco6_Q132_3
   + coco6_q137_1: Se charge de la lessive ego, coco6_q137_2: conjoint.e
 - Les tâches fait par répondant
   + coco6_Q51: Fréquence de la surveillance des travaux scolaires des enfants
+  + coco6_q59_2: Temps consacré à : s’occuper de ses enfants
+  + coco6_q59_3: Temps consacré à : prendre soin de personnes fragiles ou vulnérables
+  + coco6_q59_4: Temps consacré à : exercer son activité professionnelle
+- Les activités recréatives ou reposantes 
+  + coco6_q59_5: Temps consacré à : faire des exercices physiques / du sport
+  + coco6_q59_6: Temps consacré à : dormir
  
 # Historique des étapes sur R
 ## Télécharger les packages
