@@ -9,13 +9,13 @@ output:
     toc_depth : '3' # Précision de la table des matières
     toc_float: true # Laisser la table des matières constamment
 ---
-# Rappel des consignes pour le dossier
+# Checklist - Rappel des consignes pour le dossier
 
 Il s’agira d’un dossier en groupe de 2 à 4 étudiant·es au choix à partir de données fournies et à rechercher autour d’une même thématique. Le dossier rendu sera :
 
-- un document (.odt, .pdf ou .html)
+- (OK) un document (.odt, .pdf ou .html)
 - rédigé de 4 à 6 pages
-- à partir d’un fichier .Rmd
+- (OK) à partir d’un fichier .Rmd
 - (OK) comportant au moins une carte
 - présentant des résultats pondérés
 - et au moins un test statistique.
@@ -38,9 +38,9 @@ Définition : la charge mentale entrait dans l’édition 2020 du Larousse, déf
 
 "C'est devoir penser à tout, tout le temps, et pour tout le monde. C'est l'impression de devoir tout gérer, d'avoir l'impression aussi de devoir être parfait sur tous les fronts -sans réussir à tirer la sonnette d'alarme quand il faudrait- en pensant que tout repose sur ses propres épaules" détaille Laurence Bourgeois. 
 
-Carte graphique : 
-Données :
-Fond de carte :
+## Carte graphique : 
+Données : https://www.data.gouv.fr/fr/datasets/chiffres-cles-concernant-lepidemie-de-covid19-en-france/
+Fond de carte : fichier sous zip
 
 # Historique des étapes sur R
 ## Télécharger les packages
