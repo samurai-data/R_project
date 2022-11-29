@@ -51,12 +51,30 @@ Fond de carte : fichier sous zip
 
 ## Données nécessaires et variables pertinentes 
 - Caratèristique socio-démograpghie de l'individu
-  + Age
-  + Sexe
-  + Niveau de formation (rép+conj)
-  + En activité (rép+conj)
-  + CSP (rép+conj)
-
+  + Age décennal en 7 classes : cal_AGE1
+  + Sexe : eayy_A1
+  + Niveau de formation du I au VI (rép+conj) : eayy_B18C et eayy_B18CCJT
+  + En activité : oui/non (rép+conj) : eayy_B1B et eayy_B1BCJT
+  + Groupe socioprofessionnel en 6 postes (rép+conj) : eayy_PCS6 et eayy_PCS6CJT 
+- Information du ménage
+  + Type de ménage, 5 types (une seule personne/ monoparentale/ couple sans/ avec enfant/ complexe) : eayy_TYPMEN5
+  + Nombre d'enfants cohabitants (0/1/2/3+/Non concerné) : eayy_C8B_rec
+  + area >=25 m2 par personne (oui/non) : coco1_q26
+  + Revenu mensuel par unité de consommation en 10 classes : eayy_E2AUC
+- L'impact du télétravail et du confinement
+  + Les sentiments : 
+  + Avis sur quotidien : journées denses et stresse intense : coco6_Q200_2 et coco6_Q200_4
+  + Avis télétravail : permet de se concentrer et mélange trop vie privée et vie
+professionnelle : coco6_Q132_2 et coco6_Q132_3
+  + coco6_Q62mod: Expérience du confinement
+  + coco6_Q25: Tensions au sein du ménage
+- La division des tâches domestiques actuellement (toujours/souvent/parfois/jamais)
+  + coco6_q135_1: Se charge de la cuisine ego, coco6_q135_2: conjoint.e
+  + coco6_q136_1: Se charge des courses ego, coco6_q136_2: conjoint.e
+  + coco6_q137_1: Se charge de la lessive ego, coco6_q137_2: conjoint.e
+- Les tâches fait par répondant
+  + coco6_Q51: Fréquence de la surveillance des travaux scolaires des enfants
+ 
 # Historique des étapes sur R
 ## Télécharger les packages
 ```{r}
