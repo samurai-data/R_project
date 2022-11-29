@@ -32,15 +32,30 @@ Attendus
 - Données transmises : coco - vague 1 à coco - vague 6, les autres vagues, fonds départements et communes
 
 # Présentation du sujet et de nos hypothèses sociologiques
-Sujet : La charge mentale ( des femmes?) face au Covid
+Sujet : La charge mentale des femmes face au Covid
 
 Définition : la charge mentale entrait dans l’édition 2020 du Larousse, définie comme « poids psychologique que fait peser (plus particulièrement sur les femmes) la gestion des tâches domestiques et éducatives, engendrant une fatigue physique et, surtout, psychique ».
 
 "C'est devoir penser à tout, tout le temps, et pour tout le monde. C'est l'impression de devoir tout gérer, d'avoir l'impression aussi de devoir être parfait sur tous les fronts -sans réussir à tirer la sonnette d'alarme quand il faudrait- en pensant que tout repose sur ses propres épaules" détaille Laurence Bourgeois. 
 
+Références :
+https://www.europarl.europa.eu/RegData/etudes/BRIE/2022/719547/IPOL_BRI(2022)719547_FR.pdf
+https://lejournal.cnrs.fr/nos-blogs/dialogues-economiques/la-charge-mentale-une-double-peine-pour-les-femmes
+https://start.lesechos.fr/societe/egalite-diversite/charge-mentale-le-travail-domestique-des-meres-a-double-pendant-la-crise-selon-le-bcg-1295877
+https://www.lecrsa.ca/wp-content/uploads/2022/04/RAPPORT_Charge-mentale_F_P-S.pdf
+https://www.francetvinfo.fr/sante/maladie/coronavirus/il-ne-sait-pas-ce-que-c-est-que-de-gerer-les-enfants-a-la-maison-avec-le-covid-19-la-charge-mentale-pese-plus-lourd-sur-les-femmes_4328609.html
+
 ## Carte graphique : 
 Données : https://www.data.gouv.fr/fr/datasets/chiffres-cles-concernant-lepidemie-de-covid19-en-france/
 Fond de carte : fichier sous zip
+
+## Données nécessaires et variables pertinentes 
+- Caratèristique socio-démograpghie de l'individu
+  + Age
+  + Sexe
+  + Niveau de formation (rép+conj)
+  + En activité (rép+conj)
+  + CSP (rép+conj)
 
 # Historique des étapes sur R
 ## Télécharger les packages
