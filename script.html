@@ -1372,17 +1372,23 @@ overflow-y: auto;
 border: 1px solid #ddd;
 border-radius: 4px;
 }
-.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-content: "\e259";
+.tabset-dropdown > .nav-tabs > li.active:before {
+content: "";
 font-family: 'Glyphicons Halflings';
 display: inline-block;
 padding: 10px;
 border-right: 1px solid #ddd;
 }
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-content: "\e258";
-font-family: 'Glyphicons Halflings';
+content: "";
 border: none;
+}
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+content: "";
+font-family: 'Glyphicons Halflings';
+display: inline-block;
+padding: 10px;
+border-right: 1px solid #ddd;
 }
 .tabset-dropdown > .nav-tabs > li.active {
 display: block;
@@ -1486,7 +1492,7 @@ border-radius: 0px;
 
 <h1 class="title toc-ignore">R_projet</h1>
 <h4 class="author">Inessa Kim, Mai-Anh Pham, Nao Ueda</h4>
-<h4 class="date">Dernière modif : 29/11/2022</h4>
+<h4 class="date">Dernière modif : 28/12/2022</h4>
 
 </div>
 
@@ -1618,22 +1624,25 @@ sur R</h1>
 <h2><span class="header-section-number">3.1</span> Télécharger les
 packages</h2>
 <pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
-## ✔ ggplot2 3.4.0      ✔ purrr   0.3.5 
-## ✔ tibble  3.1.8      ✔ dplyr   1.0.10
-## ✔ tidyr   1.2.1      ✔ stringr 1.4.1 
-## ✔ readr   2.1.3      ✔ forcats 0.5.2 
-## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-## ✖ dplyr::filter() masks stats::filter()
-## ✖ dplyr::lag()    masks stats::lag()</code></pre>
+<pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --</code></pre>
+<pre><code>## v ggplot2 3.3.5      v purrr   0.3.4 
+## v tibble  3.1.6      v dplyr   1.0.10
+## v tidyr   1.1.4      v stringr 1.4.0 
+## v readr   2.1.3      v forcats 0.5.1</code></pre>
+<pre><code>## Warning: le package &#39;readr&#39; a été compilé avec la version R 4.1.3</code></pre>
+<pre><code>## Warning: le package &#39;dplyr&#39; a été compilé avec la version R 4.1.3</code></pre>
+<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="r"><code>library(questionr)
 library(readr)
-library(knitr)
-library(kableExtra)</code></pre>
+library(knitr)</code></pre>
+<pre><code>## Warning: le package &#39;knitr&#39; a été compilé avec la version R 4.1.3</code></pre>
+<pre class="r"><code>library(kableExtra)</code></pre>
+<pre><code>## Warning: le package &#39;kableExtra&#39; a été compilé avec la version R 4.1.3</code></pre>
 <pre><code>## 
-## Attachement du package : &#39;kableExtra&#39;
-## 
-## L&#39;objet suivant est masqué depuis &#39;package:dplyr&#39;:
+## Attachement du package : &#39;kableExtra&#39;</code></pre>
+<pre><code>## L&#39;objet suivant est masqué depuis &#39;package:dplyr&#39;:
 ## 
 ##     group_rows</code></pre>
 <p><em>Les données : coco1 et coco6</em></p>

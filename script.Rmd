@@ -293,3 +293,208 @@ https://lejournal.cnrs.fr/nos-blogs/dialogues-economiques/la-charge-mentale-une-
 
 # Donnée surpprimentaire
 https://www.data.gouv.fr/fr/pages/donnees-coronavirus/
+
+
+
+
+#####################################################
+#####################################################
+
+---
+title: "Test _projet R"
+author: "N"
+format: html
+editor: visual
+---
+
+coco1 et coco6
+
+{r}
+coco1 <- read.csv("fr.cdsp.ddi.elipss.202004coco1.csv")
+
+coco6 <- read.csv("fr.cdsp.ddi.elipss.202010.csv")
+
+sexe 
+
+{r}
+
+fct_freq_sexe <- function(x){
+  recod <- fct_collapse(factor(x),
+  "Homme"="1",
+  "Femme"="2")
+  return(recod)
+}
+
+# Recodage
+coco1$sexe <- fct_freq_sexe(coco1$eayy_A1)
+coco6$sexe <- fct_freq_sexe(coco6$eayy_A1)
+
+freq(coco1$sexe, total= T, valid=F)
+freq(coco6$sexe, total= T, valid=F)
+
+# poids de sexe par vague1 
+wtd.table(coco1$sexe, weights = coco1$coco1_POIDS,
+          useNA = "ifany")
+
+wtd.table(coco1$sexe, weights = coco1$coco1_POIDS,
+          useNA = "ifany") %>% 
+  round()#<<
+
+#poids de pourcentagesde sexe par vague1 
+round(wtd.table(coco1$sexe, weights = coco1$coco1_POIDS,
+          useNA = "ifany") %>% 
+  prop.table()*100,1)#<<
+
+# # poids de sexe par vague6 
+wtd.table(coco6$sexe, weights = coco6$POIDS_coco6,
+          useNA = "ifany")
+
+wtd.table(coco6$sexe, weights = coco6$POIDS_coco6,
+          useNA = "ifany") %>% 
+  round()#<<
+
+#poids de pourcentagesde sexe par vague6 
+round(wtd.table(coco6$sexe, weights = coco6$POIDS_coco6,
+          useNA = "ifany") %>% 
+  prop.table()*100,1)#<<
+
+
+ages 
+
+{r}
+
+fct_freq_age <- function(x){
+  recod <- fct_collapse(factor(x),
+  "Moins de 24"="4", "De 25 à 29 ans"="5", 
+                        "De 30 à 34 ans"="6", "De 35 à 39 ans"="7",
+                        "De 40 à 44 ans"="8", "De 45 à 49 ans"="9",
+                        "De 50 à 54 ans"="10", "De 55 à 59 ans"="11",
+                        "De 60 à 64 ans"="12", "De 65 à 69 ans"="13",
+                        "70 ans et plus"="14")
+  return(recod)
+}
+
+# Recodage
+coco1$age <- fct_freq_age(coco1$eayy_A2A_rec)
+coco6$age <- fct_freq_age(coco6$eayy_A2A_rec)
+
+
+freq(coco1$age, total= T, valid=F)
+freq(coco6$age, total= T, valid=F)
+
+{r}
+# Tableau de croise vague 1(groupe d'age et sexe) :
+wtd.table(coco1$age,coco1$sexe,  
+          weights = coco1$coco1_POIDS, useNA = "ifany") %>% 
+  rprop(digits=1)
+
+# Tableau de croise vague 6(groupe d'age et sexe) :
+wtd.table(coco6$age,coco6$sexe,  
+          weights = coco6$POIDS_coco6, useNA = "ifany") %>% 
+  rprop(digits=1)
+
+Groupe socioprofessionnel en 6 postes (rép+conj):eayy_PCS6 et eayy_PCS6CJT 
+
+{r, warning=FALSE}
+fct_freq_sociopro <- function(x){
+  recod <- fct_collapse(factor(x),
+                        "Agriculteurs exploitants"="1",
+                        "Artisans, commerçants et chefs d'entreprise"="2", 
+                        "Cadres et professions intellectuelles supérieures"="3",
+                        "Professions intermédiaires"="4",
+                        "Employés"="5", "Ouvriers"="6",
+                        "Ne sait pas "=c("66","666" ,"999"))
+  return(recod)
+}
+
+# Recodage
+
+coco1$sociopro <- fct_freq_sociopro(coco1$eayy_PCS6)
+coco6$sociopro <- fct_freq_sociopro(coco6$eayy_PCS6)
+
+
+
+L’étude des caractéristiques socio des femmes pour décrire notre population
+
+{r}
+#vague1
+wtd.table(coco1$sociopro,coco1$sexe,
+          weights = coco1$coco1_POIDS, useNA = "ifany") %>% 
+  rprop(digits=1)
+#vague6
+wtd.table(coco6$sociopro,coco6$sexe,
+          weights = coco6$POIDS_coco6, useNA = "ifany") %>% 
+  rprop(digits=1)
+
+vie en couple
+
+{r}
+fct_freq_couple <- function(x){
+  recod <- fct_collapse(factor(x),
+  "Couple cohabitation"="1", 
+  "Couple non-cohabitation"="2", 
+  "Ne pas en couple"="3")
+  return(recod)
+}
+
+# Recodage
+coco1$couple <- fct_freq_couple(coco1$eayy_A5)
+coco6$couple <- fct_freq_couple(coco6$eayy_A5)
+## eayy_A5: Vit en couple
+
+freq(coco1$couple, total= T, valid=F)
+freq(coco6$couple, total= T, valid=F)
+
+
+{r}
+# Tableau de croise vague 1(couple et sexe) :
+wtd.table(coco1$couple,coco1$sexe,  
+          weights = coco1$coco1_POIDS, useNA = "ifany") %>% 
+  rprop(digits=1)
+
+# Tableau de croise vague 6(couple et sexe) :
+wtd.table(coco6$couple,coco6$sexe,
+          weights = coco6$POIDS_coco6, useNA = "ifany") %>% 
+  rprop(digits=1)
+
+
+
+sentiment croise de pop femmes
+
+#solitude 
+
+{r}
+# Créer la fonction
+fct_freq_senti_solitude <- function(x){
+  recod <- fct_collapse(factor(x),
+  "Très seul(e)"="1", 
+  "Plutôt seul(e)"="2", 
+  "Plutôt entouré(e)"="3",
+  "Très entouré(e)t"="4",
+  "Ne sais pas" = "9999")
+  return(recod)
+}
+#Recodage
+coco1$solitude <- fct_freq_senti_solitude(coco1$coco1_q21)
+
+{r}
+# Créer la fonction
+fct_freq_senti <- function(x){
+  recod <- fct_collapse(factor(x),
+  "En permanence"="1", 
+  "Souvent"="2", 
+  "Quelques fois"="3",
+  "Rarement"="4",
+  "Jamais" = "5")
+  return(recod)
+}
+# Recodage
+coco1$nerveux <- fct_freq_senti(coco1$coco1_q16)
+coco1$decourage <- fct_freq_senti(coco1$coco1_q17)
+coco1$triste <- fct_freq_senti(coco1$coco1_q19)
+
+coco6$nerveux <- fct_freq_senti(coco1$coco1_q16)
+coco6$decourage <- fct_freq_senti(coco1$coco1_q17)
+coco6$triste <- fct_freq_senti(coco1$coco1_q19)
+
+
