@@ -9,10 +9,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Inessa Kim, Mai-Anh Pham, Nao Ueda" />
+<meta name="author" content="N" />
 
 
-<title>R_projet</title>
+<title>Test _projet R</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -1490,8 +1490,8 @@ border-radius: 0px;
 
 
 
-<h1 class="title toc-ignore">R_projet</h1>
-<h4 class="author">Inessa Kim, Mai-Anh Pham, Nao Ueda</h4>
+<h1 class="title toc-ignore">Test _projet R</h1>
+<h4 class="author">N</h4>
 <h4 class="date">Dernière modif : 28/12/2022</h4>
 
 </div>
@@ -1969,6 +1969,132 @@ avec le plus de charge mentale</h2>
 <h1><span class="header-section-number">6</span> Donnée
 surpprimentaire</h1>
 <p><a href="https://www.data.gouv.fr/fr/pages/donnees-coronavirus/" class="uri">https://www.data.gouv.fr/fr/pages/donnees-coronavirus/</a></p>
+<div id="section" class="section level53" number="6.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.1">
+<p class="heading"><span class="header-section-number">6.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.1</span>
+</p>
+</div>
+<div id="section-1" class="section level53" number="6.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.2">
+<p class="heading"><span class="header-section-number">6.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.2</span>
+</p>
+<p>coco1 et coco6</p>
+<p>{r} coco1 &lt;- read.csv(“fr.cdsp.ddi.elipss.202004coco1.csv”)</p>
+<p>coco6 &lt;- read.csv(“fr.cdsp.ddi.elipss.202010.csv”)</p>
+<p>sexe</p>
+<p>{r}</p>
+<p>fct_freq_sexe &lt;- function(x){ recod &lt;- fct_collapse(factor(x),
+“Homme”=“1”, “Femme”=“2”) return(recod) }</p>
+</div>
+</div>
+<div id="recodage" class="section level1" number="7">
+<h1><span class="header-section-number">7</span> Recodage</h1>
+<p>coco1<span class="math inline">\(sexe &lt;-
+fct_freq_sexe(coco1\)</span>eayy_A1) coco6<span class="math inline">\(sexe &lt;-
+fct_freq_sexe(coco6\)</span>eayy_A1)</p>
+<p>freq(coco1<span class="math inline">\(sexe, total= T, valid=F)
+freq(coco6\)</span>sexe, total= T, valid=F)</p>
+</div>
+<div id="poids-de-sexe-par-vague1" class="section level1" number="8">
+<h1><span class="header-section-number">8</span> poids de sexe par
+vague1</h1>
+<p>wtd.table(coco1<span class="math inline">\(sexe, weights =
+coco1\)</span>coco1_POIDS, useNA = “ifany”)</p>
+<p>wtd.table(coco1<span class="math inline">\(sexe, weights =
+coco1\)</span>coco1_POIDS, useNA = “ifany”) %&gt;% round()#&lt;&lt;</p>
+<p>#poids de pourcentagesde sexe par vague1 round(wtd.table(coco1<span class="math inline">\(sexe, weights = coco1\)</span>coco1_POIDS, useNA =
+“ifany”) %&gt;% prop.table()*100,1)#&lt;&lt;</p>
+</div>
+<div id="poids-de-sexe-par-vague6" class="section level1" number="9">
+<h1><span class="header-section-number">9</span> # poids de sexe par
+vague6</h1>
+<p>wtd.table(coco6<span class="math inline">\(sexe, weights =
+coco6\)</span>POIDS_coco6, useNA = “ifany”)</p>
+<p>wtd.table(coco6<span class="math inline">\(sexe, weights =
+coco6\)</span>POIDS_coco6, useNA = “ifany”) %&gt;% round()#&lt;&lt;</p>
+<p>#poids de pourcentagesde sexe par vague6 round(wtd.table(coco6<span class="math inline">\(sexe, weights = coco6\)</span>POIDS_coco6, useNA =
+“ifany”) %&gt;% prop.table()*100,1)#&lt;&lt;</p>
+<p>ages</p>
+<p>{r}</p>
+<p>fct_freq_age &lt;- function(x){ recod &lt;- fct_collapse(factor(x),
+“Moins de 24”=“4”, “De 25 à 29 ans”=“5”, “De 30 à 34 ans”=“6”, “De 35 à
+39 ans”=“7”, “De 40 à 44 ans”=“8”, “De 45 à 49 ans”=“9”, “De 50 à 54
+ans”=“10”, “De 55 à 59 ans”=“11”, “De 60 à 64 ans”=“12”, “De 65 à 69
+ans”=“13”, “70 ans et plus”=“14”) return(recod) }</p>
+</div>
+<div id="recodage-1" class="section level1" number="10">
+<h1><span class="header-section-number">10</span> Recodage</h1>
+<p>coco1<span class="math inline">\(age &lt;-
+fct_freq_age(coco1\)</span>eayy_A2A_rec) coco6<span class="math inline">\(age &lt;-
+fct_freq_age(coco6\)</span>eayy_A2A_rec)</p>
+<p>freq(coco1<span class="math inline">\(age, total= T, valid=F)
+freq(coco6\)</span>age, total= T, valid=F)</p>
+<p>{r} # Tableau de croise vague 1(groupe d’age et sexe) :
+wtd.table(coco1<span class="math inline">\(age,coco1\)</span>sexe,<br />
+weights = coco1$coco1_POIDS, useNA = “ifany”) %&gt;% rprop(digits=1)</p>
+</div>
+<div id="tableau-de-croise-vague-6groupe-dage-et-sexe" class="section level1" number="11">
+<h1><span class="header-section-number">11</span> Tableau de croise
+vague 6(groupe d’age et sexe) :</h1>
+<p>wtd.table(coco6<span class="math inline">\(age,coco6\)</span>sexe,<br />
+weights = coco6$POIDS_coco6, useNA = “ifany”) %&gt;% rprop(digits=1)</p>
+<p>Groupe socioprofessionnel en 6 postes (rép+conj):eayy_PCS6 et
+eayy_PCS6CJT</p>
+<p>{r, warning=FALSE} fct_freq_sociopro &lt;- function(x){ recod &lt;-
+fct_collapse(factor(x), “Agriculteurs exploitants”=“1”, “Artisans,
+commerçants et chefs d’entreprise”=“2”, “Cadres et professions
+intellectuelles supérieures”=“3”, “Professions intermédiaires”=“4”,
+“Employés”=“5”, “Ouvriers”=“6”, “Ne sait pas”=c(“66”,“666” ,“999”))
+return(recod) }</p>
+</div>
+<div id="recodage-2" class="section level1" number="12">
+<h1><span class="header-section-number">12</span> Recodage</h1>
+<p>coco1<span class="math inline">\(sociopro &lt;-
+fct_freq_sociopro(coco1\)</span>eayy_PCS6) coco6<span class="math inline">\(sociopro &lt;-
+fct_freq_sociopro(coco6\)</span>eayy_PCS6)</p>
+<p>L’étude des caractéristiques socio des femmes pour décrire notre
+population</p>
+<p>{r} #vague1 wtd.table(coco1<span class="math inline">\(sociopro,coco1\)</span>sexe, weights = coco1<span class="math inline">\(coco1_POIDS, useNA = &quot;ifany&quot;)
+%&gt;%  rprop(digits=1) #vague6
+wtd.table(coco6\)</span>sociopro,coco6<span class="math inline">\(sexe,  weights = coco6\)</span>POIDS_coco6, useNA
+= “ifany”) %&gt;% rprop(digits=1)</p>
+<p>vie en couple</p>
+<p>{r} fct_freq_couple &lt;- function(x){ recod &lt;-
+fct_collapse(factor(x), “Couple cohabitation”=“1”, “Couple
+non-cohabitation”=“2”, “Ne pas en couple”=“3”) return(recod) }</p>
+</div>
+<div id="recodage-3" class="section level1" number="13">
+<h1><span class="header-section-number">13</span> Recodage</h1>
+<p>coco1<span class="math inline">\(couple &lt;-
+fct_freq_couple(coco1\)</span>eayy_A5) coco6<span class="math inline">\(couple &lt;-
+fct_freq_couple(coco6\)</span>eayy_A5) ## eayy_A5: Vit en couple</p>
+<p>freq(coco1<span class="math inline">\(couple, total= T, valid=F)
+freq(coco6\)</span>couple, total= T, valid=F)</p>
+<p>{r} # Tableau de croise vague 1(couple et sexe) :
+wtd.table(coco1<span class="math inline">\(couple,coco1\)</span>sexe,<br />
+weights = coco1$coco1_POIDS, useNA = “ifany”) %&gt;% rprop(digits=1)</p>
+</div>
+<div id="tableau-de-croise-vague-6couple-et-sexe" class="section level1" number="14">
+<h1><span class="header-section-number">14</span> Tableau de croise
+vague 6(couple et sexe) :</h1>
+<p>wtd.table(coco6<span class="math inline">\(couple,coco6\)</span>sexe,
+weights = coco6$POIDS_coco6, useNA = “ifany”) %&gt;% rprop(digits=1)</p>
+<p>sentiment croise de pop femmes</p>
+<p>#solitude</p>
+<p>{r} # Créer la fonction fct_freq_senti_solitude &lt;- function(x){
+recod &lt;- fct_collapse(factor(x), “Très seul(e)”=“1”, “Plutôt
+seul(e)”=“2”, “Plutôt entouré(e)”=“3”, “Très entouré(e)t”=“4”, “Ne sais
+pas” = “9999”) return(recod) } #Recodage coco1<span class="math inline">\(solitude &lt;-
+fct_freq_senti_solitude(coco1\)</span>coco1_q21)</p>
+<p>{r} # Créer la fonction fct_freq_senti &lt;- function(x){ recod &lt;-
+fct_collapse(factor(x), “En permanence”=“1”, “Souvent”=“2”, “Quelques
+fois”=“3”, “Rarement”=“4”, “Jamais” = “5”) return(recod) } # Recodage
+coco1<span class="math inline">\(nerveux &lt;-
+fct_freq_senti(coco1\)</span>coco1_q16) coco1<span class="math inline">\(decourage &lt;-
+fct_freq_senti(coco1\)</span>coco1_q17) coco1<span class="math inline">\(triste &lt;-
+fct_freq_senti(coco1\)</span>coco1_q19)</p>
+<p>coco6<span class="math inline">\(nerveux &lt;-
+fct_freq_senti(coco1\)</span>coco1_q16) coco6<span class="math inline">\(decourage &lt;-
+fct_freq_senti(coco1\)</span>coco1_q17) coco6<span class="math inline">\(triste &lt;-
+fct_freq_senti(coco1\)</span>coco1_q19)</p>
 </div>
 
 
