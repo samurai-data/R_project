@@ -299,6 +299,25 @@ https://www.data.gouv.fr/fr/pages/donnees-coronavirus/
 
 #####################################################
 #####################################################
+
+### Introduction
+
+La santé mentale est un sujet crucial du XXIème siècle qui est devenu un enjeu majeur lors de la pandémie du COVID-19. Des nombreuses études montrent que la pandémie du COVID-19 a entrainé une hausse mondiale des problèmes de santé mentales, y compris la dépression et l’anxiété généralisée.  
+
+En effet, la propagation du virus s’est accompagnée d’une montée de l’inquiétude face à l’infection et de la mise en place de mesures restrictives ainsi que du confinement. Par ailleurs, l’isolement, la baisse d’activité physique, l’augmentation du stress et l’organisation du travail à domicile couplée à la gestion de la vie familiale sont également des facteurs qui peuvent avoir un impact sur la santé mentale.
+Ainsi, pour cette étude nous nous sommes intéressées à la santé mentale et le bien-être des Français et, notamment, aux inégalités femmes-hommes dans les deux vagues de l’enquête ELIPSS « Faire face au Covid-19 ». Le fait d’observer les deux vagues de l’enquête nous permet de comparer les résultats entre le début du premier confinement et quelques mois après sa fin.
+
+*Présentation des données*
+
+La base de données utilisée pour notre étude provient de l’enquête Coping with COVID-19 dont l’objectif est de mesurer l’expérience social du confinement en France. Cette enquête s’est appuyée sur un dispositif empirique préexistant - ELIPSS, un panel représentatif d’environ un millier de répondants suivis longitudinalement - et l’a transformé en un baromètre permettant de suivre l’expérience du confinement en France à des intervalles réguliers (5 vagues d’enquêtes de début avril à fin mai 2020).
+
+*Plan*
+
+Dans un premier temps, nous allons présenter le profil général de la population observée ainsi que les variables déterminantes du bien-être et de la santé mentale. Ensuite, nous allons nous concentrer sur les facteurs qui peuvent avoir un impact sur la santé mentale des personnes enquêtées. Enfin, nous allons présenter les résultats principaux de notre étude dans la partie finale de notre dossier.  
+
+
+###############Nao################
+
 # L’étude des caractéristiques socio des femmes pour décrire notre population 
 
 
@@ -458,3 +477,289 @@ wtd.table(coco6$couple,coco6$sexe,
 
 
 
+#########Inessa##############
+############################
+
+### Santé physique
+```{r}
+#état de santé percu (Diriez-vous que, dans l'ensemble, votre santé est :)
+
+#recodage de la variable
+fct_sante <- function(x){
+  recod <- fct_collapse(factor(x),
+  "Très bonne"="1", 
+  "Bonne"="2", 
+  "Assez bonne"="3",
+  "Mauvaise"="4",
+  "Très mauvaise"="5",
+  "N'a pas repondu"="9999")
+  return(recod)
+}
+coco1$sante <- fct_sante(coco1$coco1_q04)
+coco6$sante <- fct_sante(coco6$coco6_Q04)
+
+# vague 1
+sante_vague1 <- wtd.table(coco1$sante,coco1$sexe, weights = coco1$coco1_POIDS,
+          useNA = "ifany", exclude = "N'a pas repondu") %>%
+  prop(digits=1)
+#vague 6
+sante_vague6 <- wtd.table(coco6$sante,coco6$sexe, weights = coco6$POIDS_coco6,
+          useNA = "ifany", exclude = "N'a pas repondu") %>%
+  prop(digits=1)
+
+#remarque: les resultats sont assez similaires dans les deux vagues
+
+```
+
+
+```{r}
+#fusionner les deux vagues
+t_sante <- cbind(sante_vague1, sante_vague6)
+#presenter le tableau
+
+t_sante_df <- as.data.frame(t_sante)
+colnames(t_sante_df) <- c("Homme", "Femme", "Total", "homme", "femme", "total")
+
+library(tibble)
+t_sante_df <- rownames_to_column(t_sante_df, "Etat de santé")
+
+library(gt)
+t_sante_df %>%
+  gt() %>%
+  tab_spanner(label = "Vague 1", columns = c(2, 3, 4)) %>%
+  tab_spanner(label = "Vague 6", columns = c(5, 6, 7)) %>%
+  tab_style(style = list(cell_text(weight = "bold")),
+            locations = cells_body(columns = c(4,7)))
+```
+
+
+```{r}
+# coco1_q05_c: Poids en kg
+#recodage
+fct_poids <- function(x){
+  recod <- fct_collapse(factor(x),
+  "Moins de 55 kg"="1", 
+  "Entre 55 et 64 kg"= c("2","3"), 
+  "Entre 65 et 74"= c("4", "5"),
+  "Entre 75 et 84 heures"= c("6","7"),
+  "85 kg et plus"= c("8", "9"),
+  "RefRep,NSP,NR" = c("7777","8888","9999"))
+  return(recod)
+}
+
+coco1$poids <- fct_poids(coco1$coco1_q05_c)
+coco6$poids <- fct_poids(coco6$coco6_Q05_c)
+
+
+#vague 1
+poids1 <- wtd.table(coco1$poids,coco1$sexe, weights = coco1$coco1_POIDS,
+          useNA = "ifany", exclude = "RefRep,NSP,NR") %>%
+  prop(digits=1)
+
+#vague 6
+poids6 <- wtd.table(coco6$poids,coco6$sexe, weights = coco6$POIDS_coco6,
+          useNA = "ifany", exclude = "RefRep,NSP,NR") %>%
+  prop(digits=1)
+
+#remarque: la prise de poids lors de la 6ème vague 
+```
+
+
+```{r}
+#fusionner les deux vagues
+t_poids <- cbind(poids1, poids6)
+#presenter le tableau
+
+t_poids_df <- as.data.frame(t_poids)
+colnames(t_poids_df) <- c("Homme", "Femme", "Total", "homme", "femme", "total")
+
+t_poids_df <- rownames_to_column(t_poids_df, "Poids")
+
+#library(gt)
+t_poids_df %>%
+  gt() %>%
+  tab_spanner(label = "Vague 1", columns = c(2, 3, 4)) %>%
+  tab_spanner(label = "Vague 6", columns = c(5, 6, 7)) %>%
+  tab_style(
+    style = list(cell_text(weight = "bold")),
+    locations = cells_body(columns = c(4,7)))
+```
+
+
+```{r}
+#eayy_K3: Fréquence activité sportive 30 minutes d'affilée
+
+#recodage de la variable
+fct_sport <- function(x){
+  recod <- fct_collapse(factor(x),
+  "Tous les jours"="1", 
+  "Plusieurs fois par semaine"="2", 
+  "Une fois par semaine"="3",
+  "1 à 3 fois par mois"="4",
+  "Moins souvent"="5",
+  "9"="9")
+  return(recod)
+}
+
+coco1$sport <- fct_sport(coco1$eayy_K3)
+coco6$sport <- fct_sport(coco6$eayy_K3)
+
+sport1 <- wtd.table(coco1$sport, coco1$sexe, weights = coco1$coco1_POIDS,
+          exclude = "9",useNA = "ifany") %>%
+  prop(digits=1)
+
+sport6 <- wtd.table(coco6$sport, coco6$sexe, weights = coco6$POIDS_coco6,
+          exclude = "9", useNA = "ifany") %>%
+  prop(digits=1)
+
+#remarque: pas de diff significatives, mais parmi ceux qui font du sport du sport tous les jours(21%), il y a une légère une augmentation parmi les femmes et une légère baisse pour les hommes lors de la 6ème vague
+```
+
+```{r}
+#fusionner les deux vagues
+t_sport <- cbind(sport1, sport6)
+#presenter le tableau
+
+t_sport_df <- as.data.frame(t_sport)
+colnames(t_sport_df) <- c("Homme", "Femme", "Total", "homme", "femme", "total")
+
+t_sport_df <- rownames_to_column(t_sport_df, "Fréquence")
+
+t_sport_df %>%
+  gt() %>%
+  tab_spanner(label = "Vague 1", columns = c(2, 3, 4)) %>%
+  tab_spanner(label = "Vague 6", columns = c(5, 6, 7)) %>%
+  tab_style(
+    style = list(cell_text(weight = "bold")),
+    locations = cells_body(columns = c(4,7)))
+```
+
+```{r}
+# coco1_q59_6: Temps consacré à dormir
+fct_temps_actvt <- function(x){
+  recod <- fct_collapse(factor(x),
+  "Je n’ai pas fait cette activité"="1", 
+  "Entre 0 et 4 heure"= c("2","3","4", "5"), 
+  "Entre 4 et 6 heures"="6",
+  "Entre 6 et 8 heures"="7",
+  "8 heures et plus"= c("8", "9"),
+  "9999" = "9999")
+  return(recod)
+}
+
+
+coco1$sommeil <- fct_temps_actvt(coco1$coco1_q59_1)
+coco6$sommeil <- fct_temps_actvt(coco6$coco6_q59_6)
+
+#vague 1
+sommeil_1 <- wtd.table(coco1$sommeil, coco1$sexe, weights = coco1$coco1_POIDS, exclude = "9999",useNA = "ifany") %>%
+  prop(digits=1)
+
+#vague 6
+sommeil_6 <- wtd.table(coco6$sommeil, coco6$sexe, weights = coco6$POIDS_coco6, exclude = "9999",useNA = "ifany") %>%
+  prop(digits=1)
+
+#remarque: lors de la 6ième vague les français dorment beaucoup plus (70% de la population passent 6h et plus à dormir alors que lors de la 1 vague 84 % consacre 4h ou moins pour le sommeil dont une partie ne dort pas du tout)
+```
+
+
+```{r}
+#fusionner les deux vagues
+t_sommeil <- cbind(sommeil_1, sommeil_6)
+
+#présenter le tableau
+
+t_sommeil_df <- as.data.frame(t_sommeil)
+colnames(t_sommeil_df) <- c("Homme", "Femme", "Total", "homme", "femme", "total")
+
+t_sommeil_df <- rownames_to_column(t_sommeil_df, "Fréquence")
+
+t_sommeil_df %>%
+  gt() %>%
+  tab_spanner(label = "Vague 1", columns = c(2, 3, 4)) %>%
+  tab_spanner(label = "Vague 6", columns = c(5, 6, 7)) %>%
+  tab_style(
+    style = list(cell_text(weight = "bold")),
+    locations = cells_body(columns = c(4,7)))
+```
+
+
+#### La vie sociale
+
+```{r}
+### coco1_q52_1: Fréquence des rencontres avec des amis dans la vie réelle
+#Pendant les deux dernières semaines, à quelle fréquence avez-vous vu les personnes suivantes (en dehors des personnes avec qui vous logez) ?
+# Créer la fonction
+fct_freq_renco <- function(x){
+  recod <- fct_collapse(factor(x),
+  "8 fois ou plus"="1", 
+  "Entre 5 et 7 fois"="2", 
+  "3 ou 4 fois"="3",
+  "1 ou 2 fois"="4",
+  "Jamais" = "5")
+  return(recod)
+}
+# Recodage
+coco1$rencontres_amis_reel <- fct_freq_renco(coco1$coco1_q52_1)
+coco6$rencontres_amis_reel <- fct_freq_renco(coco6$coco6_q52_1)
+
+#vague 1
+renco_amis1 <- wtd.table(coco1$rencontres_amis_reel, coco1$sexe, weights = coco1$coco1_POIDS, exclude = "9999",useNA = "ifany") %>%
+  prop(digits=1)
+
+#vague 6
+renco_amis6 <- wtd.table(coco6$rencontres_amis_reel, coco6$sexe, weights = coco6$POIDS_coco6, exclude = "9999",useNA = "ifany") %>%
+  prop(digits=1)
+
+#remarque: lors de la première vague la majorité de la poppulation a repondu de ne jamais avoir des rencontres dans la vie réel avec leurs amis pendant les deux dérnères sem (normal car premier confinement), pas trop de diff entre les sexes
+```
+
+```{r}
+#fusionner les deux vagues
+t_renco_amis <- cbind(renco_amis1, renco_amis6)
+
+#présenter le tableau
+
+t_renco_amis_df <- as.data.frame(t_renco_amis)
+colnames(t_renco_amis_df) <- c("Homme", "Femme", "Total", "homme", "femme", "total")
+
+t_renco_amis_df <- rownames_to_column(t_renco_amis_df, "Fréquence")
+
+t_renco_amis_df %>%
+  gt() %>%
+  tab_spanner(label = "Vague 1", columns = c(2, 3, 4)) %>%
+  tab_spanner(label = "Vague 6", columns = c(5, 6, 7)) %>%
+  tab_style(
+    style = list(cell_text(weight = "bold")),
+    locations = cells_body(columns = c(4,7)))
+```
+
+
+```{r}
+#eayy_B1B: Exercice d'une activité professionnelle
+#Variable recodée à partir de la variable B1 (Quelle est votre situation #principale vis-à-vis du travail ?) et B1A (Occupez-vous également un #emploi ?; universe=(B1 in 3:8)). Si l'interviewé a déclaré avoir un #emploi tout en étant inactif, chômeur, retraité alors le recodage B1B #est oui
+
+fct_activ_prof <- function(x){
+  recod <- fct_collapse(factor(x),
+  "Oui"="1", 
+  "Non"="2", 
+  "7"="7")
+  return(recod)
+}
+
+coco1$activ_prof <- fct_activ_prof(coco1$eayy_B1B)
+coco6$activ_prof <- fct_activ_prof(coco6$eayy_B1B)
+
+wtd.table(coco1$sexe,coco1$activ_prof,
+          weights = coco1$coco1_POIDS, useNA = "ifany", exclude = '7') %>% 
+  prop(digits=1)
+
+wtd.table(coco6$sexe,coco6$activ_prof,
+          weights = coco6$POIDS_coco6, useNA = "ifany", exclude = '7') %>% 
+  prop(digits=1)
+
+#remarque: pas de diff signif
+```
+
+
+### Conditions de vie et les activités de la vie quotidienne
