@@ -318,18 +318,22 @@ Dans un premier temps, nous allons présenter le profil général de la populati
 
 ###############Nao################
 
-# L’étude des caractéristiques socio des femmes pour décrire notre population 
+# preparation des données et des library
+```{r,warning=FALSE}
 
-
-```{r}
+library(tidyverse)
+library(questionr)
+library(readr)
+library(knitr)
+library(kableExtra)
+library(ggplot2)
+library(gt)
 coco1 <- read.csv("fr.cdsp.ddi.elipss.202004coco1.csv")
-
 coco6 <- read.csv("fr.cdsp.ddi.elipss.202010.csv")
 ```
-## sexe 
 
+# sexe
 ```{r}
-
 fct_freq_sexe <- function(x){
   recod <- fct_collapse(factor(x),
   "Homme"="1",
@@ -371,8 +375,7 @@ round(wtd.table(coco6$sexe, weights = coco6$POIDS_coco6,
   prop.table()*100,1)#<<
 ```
 
-##ages 
-
+# ages
 ```{r}
 
 fct_freq_age <- function(x){
@@ -395,19 +398,43 @@ freq(coco1$age, total= T, valid=F)
 freq(coco6$age, total= T, valid=F)
 ```
 
-```{r}
+```{r,warning=FALSE}
 # Tableau de croise vague 1(groupe d'age et sexe) :
-wtd.table(coco1$age,coco1$sexe,  
+pop_vague1<- wtd.table(coco1$age,coco1$sexe,  
           weights = coco1$coco1_POIDS, useNA = "ifany") %>% 
   rprop(digits=1)
 
 # Tableau de croise vague 6(groupe d'age et sexe) :
-wtd.table(coco6$age,coco6$sexe,  
+pop_vague6<-wtd.table(coco6$age,coco6$sexe,  
           weights = coco6$POIDS_coco6, useNA = "ifany") %>% 
   rprop(digits=1)
-```
-## Groupe socioprofessionnel en 6 postes (rép+conj):eayy_PCS6 et eayy_PCS6CJT 
 
+pop_vague1
+pop_vague6
+```
+
+## fusionner les deux vagues(population de l'etude)
+```{r}
+#fusionner les deux vagues
+pop_vague <- cbind(pop_vague1, pop_vague6)
+#presenter le tableau
+
+pop_vague_df <- as.data.frame(pop_vague)
+colnames(pop_vague_df) <- c("Homme", "Femme", "Total", "homme", "femme", "total")
+
+library(tibble)
+pop_vague_df <- rownames_to_column(pop_vague_df, "Population de l'étude.")
+
+
+pop_vague_df %>%
+  gt() %>%
+  tab_spanner(label = "Vague 1", columns = c(2, 3, 4)) %>%
+  tab_spanner(label = "Vague 6", columns = c(5, 6, 7)) %>%
+  tab_style(style = list(cell_text(weight = "bold")),
+            locations = cells_body(columns = c(4,7)))
+```
+
+# Groupe socioprofessionnel en 6 postes (rép+conj):eayy_PCS6 et eayy_PCS6CJT
 ```{r, warning=FALSE}
 fct_freq_sociopro <- function(x){
   recod <- fct_collapse(factor(x),
@@ -424,23 +451,50 @@ fct_freq_sociopro <- function(x){
 
 coco1$sociopro <- fct_freq_sociopro(coco1$eayy_PCS6)
 coco6$sociopro <- fct_freq_sociopro(coco6$eayy_PCS6)
+
+
 ```
 
-
-## L’étude des caractéristiques socio des femmes pour décrire notre population
-
+# L'étude des caractéristiques socio des femmes pour décrire notre population
 ```{r}
-#vague1
-wtd.table(coco1$sociopro,coco1$sexe,
-          weights = coco1$coco1_POIDS, useNA = "ifany") %>% 
-  rprop(digits=1)
-#vague6
-wtd.table(coco6$sociopro,coco6$sexe,
-          weights = coco6$POIDS_coco6, useNA = "ifany") %>% 
-  rprop(digits=1)
+
+# vague 1
+popsoc_vague1 <- wtd.table(coco1$sociopro,coco1$sexe, weights = coco1$coco1_POIDS,
+          useNA = "ifany", exclude = "Ne sait pas") %>%
+  prop(digits=1)
+#vague 6
+popsoc_vague6 <- wtd.table(coco6$sociopro,coco6$sexe, weights = coco6$POIDS_coco6,
+          useNA = "ifany", exclude = "Ne sait pas") %>%
+  prop(digits=1)
+
+popsoc_vague1
+popsoc_vague6
+
 ```
 
-## vie en couple
+## fusionner les deux vagues(population de socio-profession)
+```{r}
+#fusionner les deux vagues
+popsoc_vague <- cbind(popsoc_vague1, popsoc_vague6)
+
+#presenter le tableau
+popsoc_vague_df <- as.data.frame(popsoc_vague)
+colnames(popsoc_vague_df) <- c("Homme", "Femme", "Total", "homme", "femme", "total")
+
+library(tibble)
+popsoc_vague_df <- rownames_to_column(popsoc_vague_df, "Classification professionnelle de la populatoin de l'étude")
+
+library(gt)
+pop_vague_df %>%
+  gt() %>%
+  tab_spanner(label = "Vague 1", columns = c(2, 3, 4)) %>%
+  tab_spanner(label = "Vague 6", columns = c(5, 6, 7)) %>%
+  tab_style(style = list(cell_text(weight = "bold")),
+            locations = cells_body(columns = c(4,7)))
+```
+
+
+# vie en couple
 
 ```{r}
 fct_freq_couple <- function(x){
@@ -462,18 +516,346 @@ freq(coco6$couple, total= T, valid=F)
 
 ```{r}
 # Tableau de croise vague 1(couple et sexe) :
-wtd.table(coco1$couple,coco1$sexe,  
+couple_vague1<-wtd.table(coco1$couple,coco1$sexe,
           weights = coco1$coco1_POIDS, useNA = "ifany") %>% 
   rprop(digits=1)
 
 # Tableau de croise vague 6(couple et sexe) :
-wtd.table(coco6$couple,coco6$sexe,
+couple_vague6<-wtd.table(coco6$couple,coco6$sexe,
+          weights = coco6$POIDS_coco6, useNA = "ifany") %>% 
+  rprop(digits=1)
+couple_vague1
+couple_vague6
+```
+
+# Commentaire 
+
+Les répondants à notre enquête proviennent des vagues 1 et 6. Le rapport entre les sexes est de 49:51 dans les deux cas, avec une proportion légèrement plus élevée de femmes.
+En conséquence, si l'on considère le rapport hommes/femmes par groupe d'âge, on constate que, tant pour la première que pour la sixième vague, la proportion de femmes est supérieure à celle des hommes de moins de 45 ans. En particulier, une grande différence peut être observée lors de la première vague, où 34,4% des hommes et 65,5% des femmes sont âgés de 25 à 29 ans, et lors de la sixième vague, où 8,2% des hommes et 61,8% des femmes sont âgés de 30 à 34 ans.3 Les analyses futures devraient tenir compte du rapport entre les hommes et les femmes de moins de 45 ans.
+
+Des comparaisons ont été faites entre les professions des hommes et des femmes interrogés. Trois professions distinctes ont été identifiées : cadres et professions intellectuelles supérieures, professions intermédiaires et employés. cadres et professions Les Cadres et professions intellectuelles supérieures sont à prédominance masculine plutôt que féminine. Les employés, en revanche, sont beaucoup plus nombreux chez les femmes que chez les hommes. Et les professions intermédiaires sont moins sexistes. Cette classification des professions montre que les hommes sont plus susceptibles d'avoir un travail physique et un statut élevé, tandis que les femmes sont plus susceptibles d'avoir des Employés.
+Il s'agit d'une tendance observée à la fois dans la vague 1 et la vague 6. Cela signifie que le confinement n'a aucun impact sur les professions.
+
+La cohabitation des couples est ensuite comparée.
+La cohabitation en couple est répartie à peu près à parts égales entre les sexes. Cependant, dans les couples non cohabitants, les femmes sont environ 60% plus nombreuses que les hommes, tant à la vague 1 qu'à la vague 6. Et de la vague 1 à la vague 6, le couple non cohabitant a diminué de 3% chez les hommes, alors qu'il a augmenté de 4% chez les femmes. Ce changement n'est pas très important, mais le fait qu'il y ait une augmentation ou une diminution, plutôt qu'une diminution des deux, suggère qu'il y a un facteur en jeu.
+
+# Sentiment croise de pop femmes
+## solitude
+```{r, warning=FALSE}
+# Créer la fonction solitude
+
+fct_freq_senti_solitude <- function(x){
+  recod <- fct_collapse(factor(x),
+  "Très seul"="1", 
+  "Plutôt seul"="2", 
+  "Plutôt entoure"="3",
+  "Très entourét"="4",
+  "Ne sait pas" = "9999")
+  return(recod)
+}
+
+#Recodage
+coco1$solitude <- fct_freq_senti_solitude(coco1$coco1_q21)
+coco6$solitude <- fct_freq_senti_solitude(coco6$coco6_Q21)
+
+```
+
+```{r}
+solitude1<-wtd.table(coco1$solitude,coco1$sexe,
+          weights = coco1$coco1_POIDS, useNA = "ifany") %>% 
+  rprop(digits=1)
+
+solitude6<-wtd.table(coco6$solitude,coco6$sexe,
+          weights = coco6$POIDS_coco6, useNA = "ifany",exclude = "Ne sait pas") %>% 
+  rprop(digits=1)
+```
+
+#### graphique : solitude 
+```{r}
+vg1_genre_solitude <- rprop(table(sexe=coco1$sexe,
+            solitude=coco1$solitude))
+vg1_genre_solitude
+
+vg1_genre_solitude %>% 
+  data.frame() %>% 
+  filter(solitude !="Total") %>% 
+  ggplot()+
+  aes(fill=sexe, x=solitude, y= Freq) %>% 
+  geom_bar(col="black",stat="identity", position="dodge")+
+  labs(title="Solitudé selon le genre pendant le 1er confinement",
+       x="C'est senti·e solitudé",y="%",fill="",
+       caption = "Source : Coco1 - ELIPSS, CDSP, avril 2020")+
+  viridis::scale_fill_viridis(discrete=T)+
+  theme_bw()
+```
+
+```{r}
+vg6_genre_solitude <- rprop(table(sexe=coco6$sexe,
+            solitude=coco6$solitude))
+vg6_genre_solitude
+
+vg6_genre_solitude %>% 
+  data.frame() %>% 
+  filter(solitude !="Total") %>% 
+  ggplot()+
+  aes(fill=sexe, x=solitude, y= Freq) %>% 
+  geom_bar(col="black",stat="identity", position="dodge")+
+  labs(title="Solitudé selon le genre pendant le 1er confinement",
+       x="C'est senti·e solitudé",y="%",fill="",
+       caption = "Source : Coco6 - ELIPSS, CDSP, Octobre 2020")+
+  viridis::scale_fill_viridis(discrete=T)+
+  theme_bw()
+```
+
+```{r}
+coco1 %>% 
+  filter(is.na(solitude)==F) %>% 
+ggplot()+
+  aes(fill=solitude, x=sexe)+
+  geom_bar(position="fill")
+```
+
+```{r}
+coco6 %>% 
+  filter(is.na(solitude)==F) %>% 
+ggplot()+
+  aes(fill=solitude, x=sexe)+
+  geom_bar(position="fill")
+```
+#### tableau de comparaison : solitude
+```{r}
+#fusionner les deux vagues
+s_solitude <- cbind(solitude6, solitude6)
+#presenter le tableau
+
+s_solitude_df <- as.data.frame(s_solitude)
+colnames(s_solitude_df) <- c("Homme", "Femme", "Total", "homme", "femme", "total")
+
+s_solitude_df <- rownames_to_column(s_solitude_df, "Degré de solitude")
+
+#library(gt)
+s_solitude_df %>%
+  gt() %>%
+  tab_spanner(label = "Vague 1", columns = c(2, 3, 4)) %>%
+  tab_spanner(label = "Vague 6", columns = c(5, 6, 7)) %>%
+  tab_style(
+    style = list(cell_text(weight = "bold")),
+    locations = cells_body(columns = c(4,7)))
+
+```
+
+## fonction de sentiment 
+
+```{r,warning=FALSE}
+# Créer la fonction
+fct_freq_senti <- function(x){
+  recod <- fct_collapse(factor(x),
+  "En permanence"="1", 
+  "Souvent"="2", 
+  "Quelques fois"="3",
+  "Rarement"="4",
+  "Jamais" = "5",
+  "Ne sait pas" = "9999"
+  )
+  return(recod)
+}
+# Recodage
+coco1$nerveux <- fct_freq_senti(coco1$coco1_q16)
+coco1$decourage <- fct_freq_senti(coco1$coco1_q17)
+coco1$triste <- fct_freq_senti(coco1$coco1_q19)
+
+coco6$nerveux <- fct_freq_senti(coco6$coco6_Q16)
+coco6$decourage <- fct_freq_senti(coco6$coco6_Q17)
+coco6$triste <- fct_freq_senti(coco6$coco6_Q19)
+
+```
+
+
+## nerveux
+```{r}
+nerveux1<-wtd.table(coco1$nerveux,coco1$sexe,
+          weights = coco1$coco1_POIDS, useNA = "ifany") %>% 
+  rprop(digits=1)
+
+nerveux6<-wtd.table(coco6$nerveux,coco6$sexe,
+          weights = coco6$POIDS_coco6, useNA = "ifany") %>% 
+  rprop(digits=1)
+
+```
+#### graphique : nerveux
+```{r}
+coco1 %>% 
+  filter(is.na(nerveux)==F) %>% 
+ggplot()+
+  aes(fill=nerveux, x=sexe)+
+  geom_bar(position="fill")
+```
+
+```{r}
+coco6 %>% 
+  filter(is.na(nerveux)==F) %>% 
+ggplot()+
+  aes(fill=nerveux, x=sexe)+
+  geom_bar(position="fill")
+
+```
+
+#### tableau de comparaison : nerveux
+
+#decourage
+
+```{r}
+decourage1<-wtd.table(coco1$decourage,coco1$sexe,
+          weights = coco1$coco1_POIDS, useNA = "ifany") %>% 
+  rprop(digits=1)
+
+decourage6<-wtd.table(coco6$decourage,coco6$sexe,
           weights = coco6$POIDS_coco6, useNA = "ifany") %>% 
   rprop(digits=1)
 ```
 
+#### graphique : decourage
+```{r}
+coco1 %>% 
+  filter(is.na(decourage)==F) %>% 
+ggplot()+
+  aes(fill=nerveux, x=sexe)+
+  geom_bar(position="fill")
+```
 
-# sentiment croise de pop femmes
+```{r}
+coco6 %>% 
+  filter(is.na(decourage)==F) %>% 
+ggplot()+
+  aes(fill=nerveux, x=sexe)+
+  geom_bar(position="fill")
+```
+
+#### tableau de comparaison : decourage
+```{r}
+#fusionner les deux vagues
+s_decourage <- cbind(decourage6, decourage6)
+#presenter le tableau
+
+s_decourage_df <- as.data.frame(s_decourage)
+colnames(s_decourage_df) <- c("Homme", "Femme", "Total", "homme", "femme", "total")
+
+s_decourage_df <- rownames_to_column(s_decourage_df, "Degré de decourage")
+
+#library(gt)
+s_decourage_df %>%
+  gt() %>%
+  tab_spanner(label = "Vague 1", columns = c(2, 3, 4)) %>%
+  tab_spanner(label = "Vague 6", columns = c(5, 6, 7)) %>%
+  tab_style(
+    style = list(cell_text(weight = "bold")),
+    locations = cells_body(columns = c(4,7)))
+
+```
+
+#triste
+```{r}
+wtd.table(coco1$triste,coco1$sexe,
+          weights = coco1$coco1_POIDS, useNA = "ifany") %>% 
+  rprop(digits=1)
+
+wtd.table(coco6$triste,coco6$sexe,
+          weights = coco6$POIDS_coco6, useNA = "ifany") %>% 
+  rprop(digits=1)
+```
+#### graphique : triste
+```{r}
+coco1 %>% 
+  filter(is.na(triste)==F) %>% 
+ggplot()+
+  aes(fill=nerveux, x=sexe)+
+  geom_bar(position="fill")
+```
+
+```{r}
+coco6 %>% 
+  filter(is.na(triste)==F) %>% 
+ggplot()+
+  aes(fill=nerveux, x=sexe)+
+  geom_bar(position="fill")
+```
+
+#### tableau de comparaison : triste
+```{r}
+#fusionner les deux vagues
+s_triste <- cbind(triste6, triste6)
+#presenter le tableau
+
+s_triste_df <- as.data.frame(s_triste)
+colnames(s_triste_df) <- c("Homme", "Femme", "Total", "homme", "femme", "total")
+
+s_triste_df <- rownames_to_column(s_triste_df, "Degré de triste")
+
+#library(gt)
+s_triste_df %>%
+  gt() %>%
+  tab_spanner(label = "Vague 1", columns = c(2, 3, 4)) %>%
+  tab_spanner(label = "Vague 6", columns = c(5, 6, 7)) %>%
+  tab_style(
+    style = list(cell_text(weight = "bold")),
+    locations = cells_body(columns = c(4,7)))
+
+```
+
+# commentaire
+Comment les hommes et les femmes se sentent-ils chacun pendant le confinement ? Et y a-t-il des changements mentaux entre la première et la sixième vague ? On compare les différences entre les hommes et les femmes en fonction de quatre émotions : la solitude, la nervosité, le décourage et la tristesse, ainsi que lors de la première et de la sixième vague.
+La première est la solitude. Lors de la première vague, 67,1% des hommes se sentaient fortement seuls. Cela signifie que lors de la première vague, les hommes se sont sentis plus fortement seuls que les femmes. Cependant, lors de la sixième vague, ce chiffre était de 48,8%. Les hommes connaissent une tendance à la baisse de la solitude. Toutefois, la solitude des femmes est en hausse, passant de 32,9 % à 51,2 %. Cela indique qu'il existe un facteur qui accroît la solitude chez les femmes.
+Ensuite, la nervosité. Si l'on compare les hommes et les femmes, le pourcentage d'hommes et de femmes qui sont toujours nerveux est le même lors de la première vague, mais cette tendance est plus forte chez les hommes. Cependant, lors de la sixième vague, les femmes étaient toujours plus nerveuses que les hommes. Cela suggère que certains facteurs ont rendu les femmes plus négatives dans une période prolongée de confinement.
+Ensuite la decourage. Cela inverse complètement la proportion d'hommes et de femmes se sentant decourage lors des première et sixième vagues. Lors de la première vague, 69,2% des hommes et 30,8% des femmes se sont toujours sentis découragés, tandis que lors de la sixième vague, 33,7% des hommes et 66,3% des femmes se sont toujours sentis découragés.
+Enfin, il y a la trisetesse. Il n'y a pas de changement significatif dans la proportion d'hommes et de femmes qui se sentent toujours seuls. Un peu plus d'hommes que de femmes se sentent toujours seuls. Toutefois, la proportion de femmes qui se sentent souvent seules est plus élevée.
+
+Dans les vagues précédentes de solitude, de nervosité et de décourage, les hommes avaient toujours ces sentiments dans la première vague, mais dans la sixième vague, on a cnstaté que les femmes avaient tendance à avoir ces sentiments plus fortement. Cela signifie qu'il y a une raison pour que les femmes éprouvent plus fortement ces sentiments négatifs.
+La trisetesse, en revanche, tend à être un sentiment constant de triste, quel que soit le sexe.
+
+# carte
+
+```{r,warning=FALSE}
+# install.packages(c("sf", "geojsonio","ggspatial"))
+library(sf)
+#library(geojsonio)#peut être on en a pas besoin 
+library(ggspatial)
+# Import du fichier shp :
+dep <- st_read(dsn="C:/Users/white/OneDrive/Documents/GitHub/R_project/departements/departements-20180101.shp")# faut changer 
+class(dep)ger 
+class(dep)
+reg<- st_read(dsn="C:/Users/white/OneDrive/Documents/GitHub/R_project/regions/regions-20180101.shp")
+class(reg)
+```
+
+```{r}
+names(dep)
+names(reg)
+```
+
+```{r}
+dep_g <- st_transform(dep,crs=2154)
+reg_g <- st_transform(reg,crs=2154)
+```
+
+```{r}
+ggplot()+
+  geom_sf(data=dep_g)+
+  geom_sf(data=reg_g)
+```
+
+## tester la carte mais ça marche pas
+###on a pas de une file geojson, donc on a une carte mais qu'est ce que l'on fait??? 
+```{r}
+#ggplot()+
+ #geom_sf(data=dep_g, aes(fill=surf_km2))+
+  #viridis::scale_fill_viridis()+
+  #geom_sf(data=reg_g,aes(col=wikipedia))+
+  #scale_color_manual(values = c("black","grey"))+
+  #theme_bw()+
+  #labs(title = "Surface des depertements et regions",  col="wikipedia",
+  #    fill="Surface (m²)", caption="Source : OpenStreetMap, licence : ODbL")+
+  #coord_sf( datum = NA)
+```
 
 
 
