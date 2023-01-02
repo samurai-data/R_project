@@ -402,12 +402,12 @@ freq(coco6$age, total= T, valid=F)
 # Tableau de croise vague 1(groupe d'age et sexe) :
 pop_vague1<- wtd.table(coco1$age,coco1$sexe,  
           weights = coco1$coco1_POIDS, useNA = "ifany") %>% 
-  rprop(digits=1)
+  prop(digits=1)
 
 # Tableau de croise vague 6(groupe d'age et sexe) :
 pop_vague6<-wtd.table(coco6$age,coco6$sexe,  
           weights = coco6$POIDS_coco6, useNA = "ifany") %>% 
-  rprop(digits=1)
+  prop(digits=1)
 
 pop_vague1
 pop_vague6
@@ -518,15 +518,38 @@ freq(coco6$couple, total= T, valid=F)
 # Tableau de croise vague 1(couple et sexe) :
 couple_vague1<-wtd.table(coco1$couple,coco1$sexe,
           weights = coco1$coco1_POIDS, useNA = "ifany") %>% 
-  rprop(digits=1)
+  prop(digits=1)
 
 # Tableau de croise vague 6(couple et sexe) :
 couple_vague6<-wtd.table(coco6$couple,coco6$sexe,
           weights = coco6$POIDS_coco6, useNA = "ifany") %>% 
-  rprop(digits=1)
-couple_vague1
-couple_vague6
+  prop(digits=1)
+
 ```
+
+
+```{r}
+#fusionner les deux vagues
+t_couple <- cbind(couple_vague1, couple_vague6)
+
+#presenter le tableau
+couple_df <- as.data.frame(t_couple)
+colnames(couple_df) <- c("Homme", "Femme", "Total", "homme", "femme", "total")
+
+library(tibble)
+couple_df <- rownames_to_column(couple_df, "Classification professionnelle de la populatoin de l'étude")
+
+library(gt)
+couple_df %>%
+  gt() %>%
+  tab_spanner(label = "Vague 1", columns = c(2, 3, 4)) %>%
+  tab_spanner(label = "Vague 6", columns = c(5, 6, 7)) %>%
+  tab_style(style = list(cell_text(weight = "bold")),
+            locations = cells_body(columns = c(4,7)))
+```
+
+
+
 
 # Commentaire 
 
@@ -755,13 +778,13 @@ s_decourage_df %>%
 
 #triste
 ```{r}
-wtd.table(coco1$triste,coco1$sexe,
+triste1 <- wtd.table(coco1$triste,coco1$sexe,
           weights = coco1$coco1_POIDS, useNA = "ifany") %>% 
-  rprop(digits=1)
+  prop(digits=1)
 
-wtd.table(coco6$triste,coco6$sexe,
+triste6 <- wtd.table(coco6$triste,coco6$sexe,
           weights = coco6$POIDS_coco6, useNA = "ifany") %>% 
-  rprop(digits=1)
+  prop(digits=1)
 ```
 #### graphique : triste
 ```{r}
@@ -783,7 +806,7 @@ ggplot()+
 #### tableau de comparaison : triste
 ```{r}
 #fusionner les deux vagues
-s_triste <- cbind(triste6, triste6)
+s_triste <- cbind(triste1, triste6)
 #presenter le tableau
 
 s_triste_df <- as.data.frame(s_triste)
