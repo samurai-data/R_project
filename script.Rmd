@@ -885,6 +885,13 @@ ggplot()+
 #########Inessa##############
 ############################
 
+Maintenant on va observer les variables qui peuvent avoir un impact direct ou indirect sur le bien-être et la santé mentale de la population etudiée. Le choix de ces varibles répose sur les trois domaines suivants:
+
+- la santé physique
+- la vie sociale
+- les activités de la vie quotidiennes, le confinement et le télétravail
+
+
 ### Santé physique
 ```{r}
 #état de santé percu (Diriez-vous que, dans l'ensemble, votre santé est :)
@@ -892,11 +899,11 @@ ggplot()+
 #recodage de la variable
 fct_sante <- function(x){
   recod <- fct_collapse(factor(x),
-  "Très bonne"="1", 
-  "Bonne"="2", 
-  "Assez bonne"="3",
-  "Mauvaise"="4",
-  "Très mauvaise"="5",
+  "Très bon"="1", 
+  "Bon"="2", 
+  "Assez bon"="3",
+  "Mauvais"="4",
+  "Très mauvais"="5",
   "N'a pas repondu"="9999")
   return(recod)
 }
@@ -915,6 +922,8 @@ sante_vague6 <- wtd.table(coco6$sante,coco6$sexe, weights = coco6$POIDS_coco6,
 #remarque: les resultats sont assez similaires dans les deux vagues
 
 ```
+
+
 
 
 ```{r}
@@ -936,6 +945,8 @@ t_sante_df %>%
   tab_style(style = list(cell_text(weight = "bold")),
             locations = cells_body(columns = c(4,7)))
 ```
+
+Les personnes interrogées se declarent majoritairement (~95%) en très bon, bon ou assez bon état de santé et il n'y a pas de differences significatives entre les deux vagues de l'enquete ainsi que entre les deux sexes. 
 
 
 ```{r}
@@ -990,6 +1001,10 @@ t_poids_df %>%
     locations = cells_body(columns = c(4,7)))
 ```
 
+En revanche, le poids des enquêtées semble d'être affecté par le confinement, puisque lors de la deuxième vague de l'enquête la proportion des personnes obèses (85kg et plus) est d'environ 2 fois et demi supérieur à celle de la première vague(il est passé de 11,8% à 28,8% après le confinement). Ces resultats sont cohérents avec ceux obtenus dans une étude mené par la Santé Publique dans le but d'observer les comportements alimentaires des Français pendant le confinement ("Comportements alimentaires et déterminants de la prise de poids des adultes en France pendant le confinement lié à la Covid-19: évolutions perçues" (CoviPrev, 2020)).
+
+Il faut noter également que parmi les personnes qui pèsent 75kg et plus les hommes sont surreprésentés dans les deux vagues alors que 37% (53% dans la deuxième vague) de la population sont les femmes dont le poids est moins de 75kg. 
+
 
 ```{r}
 #eayy_K3: Fréquence activité sportive 30 minutes d'affilée
@@ -1020,6 +1035,9 @@ sport6 <- wtd.table(coco6$sport, coco6$sexe, weights = coco6$POIDS_coco6,
 #remarque: pas de diff significatives, mais parmi ceux qui font du sport du sport tous les jours(21%), il y a une légère une augmentation parmi les femmes et une légère baisse pour les hommes lors de la 6ème vague
 ```
 
+Les femmes sont légerement plus susceptibles de pratiquer une activité sportive 30 minutes d'affilée plusieurs fois par semaine au lieu de tous les jours. Sinon, avec la fréquence moins elevé les résultats obtenus pendant le confinement ainsi que après sa fin sont similaires entre les deux sexes. 
+
+
 ```{r}
 #fusionner les deux vagues
 t_sport <- cbind(sport1, sport6)
@@ -1039,6 +1057,7 @@ t_sport_df %>%
     locations = cells_body(columns = c(4,7)))
 ```
 
+
 ```{r}
 # coco1_q59_6: Temps consacré à dormir
 fct_temps_actvt <- function(x){
@@ -1053,7 +1072,7 @@ fct_temps_actvt <- function(x){
 }
 
 
-coco1$sommeil <- fct_temps_actvt(coco1$coco1_q59_1)
+coco1$sommeil <- fct_temps_actvt(coco1$coco1_q59_6)
 coco6$sommeil <- fct_temps_actvt(coco6$coco6_q59_6)
 
 #vague 1
@@ -1064,8 +1083,10 @@ sommeil_1 <- wtd.table(coco1$sommeil, coco1$sexe, weights = coco1$coco1_POIDS, e
 sommeil_6 <- wtd.table(coco6$sommeil, coco6$sexe, weights = coco6$POIDS_coco6, exclude = "9999",useNA = "ifany") %>%
   prop(digits=1)
 
-#remarque: lors de la 6ième vague les français dorment beaucoup plus (70% de la population passent 6h et plus à dormir alors que lors de la 1 vague 84 % consacre 4h ou moins pour le sommeil dont une partie ne dort pas du tout)
 ```
+
+
+
 
 
 ```{r}
@@ -1087,6 +1108,10 @@ t_sommeil_df %>%
     style = list(cell_text(weight = "bold")),
     locations = cells_body(columns = c(4,7)))
 ```
+
+On trouve quelques changement dans les habitudes de sommeil des Français après le premier confinement. Par exemple, lors de la deuxième vague de l'enquete la moitié des personnes interrogées a déclaré d'avoir consacré entre 6h et 8h par jour pour le sommeil pendant les deux dernières semaines contre 36% au debut du confinement. Pourtant, le nombre des personnes qui dort 8h et a baissé de 10% après le confinement.  
+
+Globalement, la proportion des enquetés qui dorment entre 0 et 6h a légèrement diminué et le nombre des personnes qui consacrent plus de 6h pour le sommeil est devenu un peu plus elevé. 
 
 
 #### La vie sociale
@@ -1140,31 +1165,218 @@ t_renco_amis_df %>%
 ```
 
 
-```{r}
-#eayy_B1B: Exercice d'une activité professionnelle
-#Variable recodée à partir de la variable B1 (Quelle est votre situation #principale vis-à-vis du travail ?) et B1A (Occupez-vous également un #emploi ?; universe=(B1 in 3:8)). Si l'interviewé a déclaré avoir un #emploi tout en étant inactif, chômeur, retraité alors le recodage B1B #est oui
 
-fct_activ_prof <- function(x){
+### Les activités de la vie quotidienne et les avis sur le confinement et le télétravail
+
+
+```{r}
+# coco1_q59_1: Temps consacré à : faire du ménage (vague1)
+#Pendant les deux dernières semaines, combien d'heures par jour, en #moyenne, avez-vous consacré aux activités suivantes : 'À faire du ménage '
+
+fct_temps_menage <- function(x){
   recod <- fct_collapse(factor(x),
-  "Oui"="1", 
-  "Non"="2", 
-  "7"="7")
+  "Je n’ai pas fait cette activité"="1", 
+  "Entre 0 et 1 heure"= "2", 
+  "Enre 1 et 2 heaures" = "3",
+  "Entre 2 et 3 heures" = "4",
+  "Entre 3 et 10 heures"= c("5","6", "7", "8"),
+  "10 heures et plus"="7",
+  "PDR" = "9999")
   return(recod)
 }
 
-coco1$activ_prof <- fct_activ_prof(coco1$eayy_B1B)
-coco6$activ_prof <- fct_activ_prof(coco6$eayy_B1B)
 
-wtd.table(coco1$sexe,coco1$activ_prof,
-          weights = coco1$coco1_POIDS, useNA = "ifany", exclude = '7') %>% 
+coco1$menage <- fct_temps_menage(coco1$coco1_q59_1)
+
+wtd.table(coco1$menage, coco1$sexe, weights = coco1$coco1_POIDS, exclude = c("9999", "9", "PDR"),useNA = "ifany") %>%
   prop(digits=1)
 
-wtd.table(coco6$sexe,coco6$activ_prof,
-          weights = coco6$POIDS_coco6, useNA = "ifany", exclude = '7') %>% 
-  prop(digits=1)
-
-#remarque: pas de diff signif
 ```
 
 
-### Conditions de vie et les activités de la vie quotidienne
+
+```{r}
+# coco1_q59_2: Temps consacré à : s’occuper de ses enfants
+
+fct_temps_enf <- function(x){
+  recod <- fct_collapse(factor(x),
+  "Je n’ai pas fait cette activité"="1", 
+  "Entre 0 et 1 heure"= "2", 
+  "Entre 1 et 2 heures"="3",
+  "Entre 2 et 3 heures"="4",
+  "Entre 3 et 4 heures"= "5",
+  "6 heures et plus" = c("6","7", "8", "9"),
+  "PDR" = "9999")
+  return(recod)
+}
+
+
+coco1$enf <- fct_temps_actvt(coco1$coco1_q59_2)
+coco6$enf <- fct_temps_actvt(coco6$coco6_q59_2)
+
+#vague 1
+enf_1 <- wtd.table(coco1$enf, coco1$sexe, weights = coco1$coco1_POIDS, exclude = c("PDR", "9999"),useNA = "ifany") %>%
+  prop(digits=1)
+
+#vague 6
+enf_6 <- wtd.table(coco6$enf, coco6$sexe, weights = coco6$POIDS_coco6, exclude = c("PDR", "9999"),useNA = "ifany") %>%
+  prop(digits=1)
+
+#remarque: consacrent plus de temps aux enfants après le confinement
+```
+
+
+
+```{r}
+#fusionner les deux vagues
+t_enf_df <- cbind(enf_1, enf_6)
+
+#présenter le tableau
+
+t_enf_df <- as.data.frame(t_enf_df)
+colnames(t_enf_df) <- c("Homme", "Femme", "Total", "homme", "femme", "total")
+
+t_enf_df <- rownames_to_column(t_enf_df, "Fréquence")
+
+t_enf_df %>%
+  gt() %>%
+  tab_spanner(label = "Vague 1", columns = c(2, 3, 4)) %>%
+  tab_spanner(label = "Vague 6", columns = c(5, 6, 7)) %>%
+  tab_style(
+    style = list(cell_text(weight = "bold")),
+    locations = cells_body(columns = c(4,7)))
+```
+
+
+
+```{r}
+# coco1_q59_3: Temps consacré à : prendre soin de personnes fragiles ou vulnérables
+
+fct_temps_soin <- function(x){
+  recod <- fct_collapse(factor(x),
+  "Je n’ai pas fait cette activité" = "1",
+  "Entre 0 et 1 heure"= "2", 
+  "Entre 1 et 2 heures"="3",
+  "Entre 2 et 3 heures"="4",
+  "3 heures et plus" = c("5", "6","7", "8", "9"),
+  "PDR" = "9999")
+  return(recod)
+}
+
+
+coco1$soin <- fct_temps_soin(coco1$coco1_q59_3)
+coco6$soin <- fct_temps_soin(coco6$coco6_q59_3)
+
+#vague 1
+soin_1 <- wtd.table(coco1$soin, coco1$sexe, weights = coco1$coco1_POIDS, exclude = c("PDR","9999"),,useNA = "ifany") %>%
+  prop(digits=1)
+
+#vague 6
+soin_6 <- wtd.table(coco6$soin, coco6$sexe, weights = coco6$POIDS_coco6, exclude = c("PDR","9999"),useNA = "ifany") %>%
+  prop(digits=1)
+
+#remarque: 
+```
+
+
+
+
+
+```{r}
+#fusionner les deux vagues
+t_soin_df <- cbind(soin_1, soin_6)
+
+#présenter le tableau
+
+t_soin_df <- as.data.frame(t_soin_df)
+colnames(t_soin_df) <- c("Homme", "Femme", "Total", "homme", "femme", "total")
+
+t_soin_df <- rownames_to_column(t_soin_df, "Fréquence")
+
+t_soin_df %>%
+  gt() %>%
+  tab_spanner(label = "Vague 1", columns = c(2, 3, 4)) %>%
+  tab_spanner(label = "Vague 6", columns = c(5, 6, 7)) %>%
+  tab_style(
+    style = list(cell_text(weight = "bold")),
+    locations = cells_body(columns = c(4,7)))
+```
+
+
+
+
+*confinement*
+coco1_q62: Description de l'expérience du confinement (coco6_Q62mod: Expérience du confinement)
+coco1_q64: Stress lié au confinement 
+
+```{r}
+#coco1_q62: Description de l'expérience du confinement
+
+fct_conf <- function(x){
+  recod <- fct_collapse(factor(x),
+  "C'est une expérience qui nous fait perdre beaucoup de temps" = "1",
+  "C'est une expérience qui permet de prendre du recul et réfléchir à
+son mode de vie"= "2", 
+  "C'est une expérience qui permet de consacrer du temps à des choses
+essentielles comme la famille, les amis et les enfants"="3",
+  "C’est une expérience qui fatigue les nerfs"="4",
+  "PDR" = "9999")
+  return(recod)
+}
+
+coco1$conf <- fct_conf(coco1$coco1_q62)
+coco6$conf <- fct_conf(coco6$coco6_Q62mod)
+
+#vague 1
+conf_1 <- wtd.table(coco1$conf, coco1$sexe, weights = coco1$coco1_POIDS, exclude = c("PDR","9999"),,useNA = "ifany") %>%
+  prop(digits=1)
+
+#vague 6
+conf_6 <- wtd.table(coco6$conf, coco6$sexe, weights = coco6$POIDS_coco6, exclude = c("PDR","9999"),useNA = "ifany") %>%
+  prop(digits=1)
+
+#remarque: 
+```
+
+
+```{r}
+#fusionner les deux vagues
+t_conf_df <- cbind(conf_1, conf_6)
+
+#présenter le tableau
+
+t_conf_df <- as.data.frame(t_conf_df)
+colnames(t_conf_df) <- c("Homme", "Femme", "Total", "homme", "femme", "total")
+
+t_conf_df <- rownames_to_column(t_conf_df, "Avis sur l'expérience du confinement")
+
+t_conf_df %>%
+  gt() %>%
+  tab_spanner(label = "Vague 1", columns = c(2, 3, 4)) %>%
+  tab_spanner(label = "Vague 6", columns = c(5, 6, 7)) %>%
+  tab_style(
+    style = list(cell_text(weight = "bold")),
+    locations = cells_body(columns = c(4,7)))
+```
+
+
+
+```{r}
+#coco1_q64: Stress lié au confinement 
+#Dans l’ensemble le confinement vous pèse…
+
+fct_stress_conf <- function(x){
+  recod <- fct_collapse(factor(x),
+  "0 Pas du tout" = "0",
+  "10 Enormément"="10")
+  return(recod)
+}
+
+coco1$conf_stress <- fct_stress_conf(coco1$coco1_q64)
+
+#vague 1
+wtd.table(coco1$conf_stress, coco1$sexe, weights = coco1$coco1_POIDS, exclude = "9999",,useNA = "ifany") %>%
+  prop(digits=1)
+
+#remarque: 
+```
