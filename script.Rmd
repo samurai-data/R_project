@@ -835,6 +835,7 @@ Enfin, il y a la trisetesse. Il n'y a pas de changement significatif dans la pro
 Dans les vagues précédentes de solitude, de nervosité et de décourage, les hommes avaient toujours ces sentiments dans la première vague, mais dans la sixième vague, on a cnstaté que les femmes avaient tendance à avoir ces sentiments plus fortement. Cela signifie qu'il y a une raison pour que les femmes éprouvent plus fortement ces sentiments négatifs.
 La trisetesse, en revanche, tend à être un sentiment constant de triste, quel que soit le sexe.
 
+
 # carte
 
 ```{r,warning=FALSE}
@@ -867,7 +868,10 @@ ggplot()+
 ```
 
 ## tester la carte mais ça marche pas
-###on a pas de une file geojson, donc on a une carte mais qu'est ce que l'on fait??? 
+###on a pas de une file geojson, donc on a une carte mais qu'est ce que l'on fait???
+
+
+ 
 ```{r}
 #ggplot()+
  #geom_sf(data=dep_g, aes(fill=surf_km2))+
@@ -1163,6 +1167,44 @@ t_renco_amis_df %>%
     style = list(cell_text(weight = "bold")),
     locations = cells_body(columns = c(4,7)))
 ```
+```{r}
+###coco1_q52_3: Fréquence des rencontres avec la famille dans la vie réelle
+# Recodage
+coco1$rencontres_fam_reel <- fct_freq_renco(coco1$coco1_q52_3)
+coco6$rencontres_fam_reel <- fct_freq_renco(coco6$coco6_q52_3)
+
+#vague 1
+renco_fam1 <- wtd.table(coco1$rencontres_fam_reel, coco1$sexe, weights = coco1$coco1_POIDS, exclude = "9999",useNA = "ifany") %>%
+  prop(digits=1)
+
+#vague 6
+renco_fam6 <- wtd.table(coco6$rencontres_fam_reel, coco6$sexe, weights = coco6$POIDS_coco6, exclude = "9999",useNA = "ifany") %>%
+  prop(digits=1)
+
+#rémarque: meme effet que avec les amis 
+```
+
+```{r}
+#fusionner les deux vagues
+t_renco_fam <- cbind(renco_fam1, renco_fam6)
+
+#présenter le tableau
+
+t_renco_fam_df <- as.data.frame(t_renco_fam)
+colnames(t_renco_fam_df) <- c("Homme", "Femme", "Total", "homme", "femme", "total")
+
+t_renco_fam_df <- rownames_to_column(t_renco_fam_df, "Fréquence")
+
+t_renco_fam_df %>%
+  gt() %>%
+  tab_spanner(label = "Vague 1", columns = c(2, 3, 4)) %>%
+  tab_spanner(label = "Vague 6", columns = c(5, 6, 7)) %>%
+  tab_style(
+    style = list(cell_text(weight = "bold")),
+    locations = cells_body(columns = c(4,7)))
+```
+
+La grande majorité de la population étudiée a repondu de ne jamais voir (rencontres physiques) leurs amis ou les membres de leur famille en dehors des personnes qui sont logées avec elles deux semaines precedant l'enquete. Les resultas sont similaires pour les deux vagues et les deux sexes. 
 
 
 
@@ -1177,7 +1219,7 @@ fct_temps_menage <- function(x){
   recod <- fct_collapse(factor(x),
   "Je n’ai pas fait cette activité"="1", 
   "Entre 0 et 1 heure"= "2", 
-  "Enre 1 et 2 heaures" = "3",
+  "Entre 1 et 2 heaures" = "3",
   "Entre 2 et 3 heures" = "4",
   "Entre 3 et 10 heures"= c("5","6", "7", "8"),
   "10 heures et plus"="7",
@@ -1192,116 +1234,8 @@ wtd.table(coco1$menage, coco1$sexe, weights = coco1$coco1_POIDS, exclude = c("99
   prop(digits=1)
 
 ```
-
-
-
-```{r}
-# coco1_q59_2: Temps consacré à : s’occuper de ses enfants
-
-fct_temps_enf <- function(x){
-  recod <- fct_collapse(factor(x),
-  "Je n’ai pas fait cette activité"="1", 
-  "Entre 0 et 1 heure"= "2", 
-  "Entre 1 et 2 heures"="3",
-  "Entre 2 et 3 heures"="4",
-  "Entre 3 et 4 heures"= "5",
-  "6 heures et plus" = c("6","7", "8", "9"),
-  "PDR" = "9999")
-  return(recod)
-}
-
-
-coco1$enf <- fct_temps_actvt(coco1$coco1_q59_2)
-coco6$enf <- fct_temps_actvt(coco6$coco6_q59_2)
-
-#vague 1
-enf_1 <- wtd.table(coco1$enf, coco1$sexe, weights = coco1$coco1_POIDS, exclude = c("PDR", "9999"),useNA = "ifany") %>%
-  prop(digits=1)
-
-#vague 6
-enf_6 <- wtd.table(coco6$enf, coco6$sexe, weights = coco6$POIDS_coco6, exclude = c("PDR", "9999"),useNA = "ifany") %>%
-  prop(digits=1)
-
-#remarque: consacrent plus de temps aux enfants après le confinement
-```
-
-
-
-```{r}
-#fusionner les deux vagues
-t_enf_df <- cbind(enf_1, enf_6)
-
-#présenter le tableau
-
-t_enf_df <- as.data.frame(t_enf_df)
-colnames(t_enf_df) <- c("Homme", "Femme", "Total", "homme", "femme", "total")
-
-t_enf_df <- rownames_to_column(t_enf_df, "Fréquence")
-
-t_enf_df %>%
-  gt() %>%
-  tab_spanner(label = "Vague 1", columns = c(2, 3, 4)) %>%
-  tab_spanner(label = "Vague 6", columns = c(5, 6, 7)) %>%
-  tab_style(
-    style = list(cell_text(weight = "bold")),
-    locations = cells_body(columns = c(4,7)))
-```
-
-
-
-```{r}
-# coco1_q59_3: Temps consacré à : prendre soin de personnes fragiles ou vulnérables
-
-fct_temps_soin <- function(x){
-  recod <- fct_collapse(factor(x),
-  "Je n’ai pas fait cette activité" = "1",
-  "Entre 0 et 1 heure"= "2", 
-  "Entre 1 et 2 heures"="3",
-  "Entre 2 et 3 heures"="4",
-  "3 heures et plus" = c("5", "6","7", "8", "9"),
-  "PDR" = "9999")
-  return(recod)
-}
-
-
-coco1$soin <- fct_temps_soin(coco1$coco1_q59_3)
-coco6$soin <- fct_temps_soin(coco6$coco6_q59_3)
-
-#vague 1
-soin_1 <- wtd.table(coco1$soin, coco1$sexe, weights = coco1$coco1_POIDS, exclude = c("PDR","9999"),,useNA = "ifany") %>%
-  prop(digits=1)
-
-#vague 6
-soin_6 <- wtd.table(coco6$soin, coco6$sexe, weights = coco6$POIDS_coco6, exclude = c("PDR","9999"),useNA = "ifany") %>%
-  prop(digits=1)
-
-#remarque: 
-```
-
-
-
-
-
-```{r}
-#fusionner les deux vagues
-t_soin_df <- cbind(soin_1, soin_6)
-
-#présenter le tableau
-
-t_soin_df <- as.data.frame(t_soin_df)
-colnames(t_soin_df) <- c("Homme", "Femme", "Total", "homme", "femme", "total")
-
-t_soin_df <- rownames_to_column(t_soin_df, "Fréquence")
-
-t_soin_df %>%
-  gt() %>%
-  tab_spanner(label = "Vague 1", columns = c(2, 3, 4)) %>%
-  tab_spanner(label = "Vague 6", columns = c(5, 6, 7)) %>%
-  tab_style(
-    style = list(cell_text(weight = "bold")),
-    locations = cells_body(columns = c(4,7)))
-```
-
+La majorité des personnes (83%) au début du confinement consacrent en moyenne entre 0 et 3h par jour pour le ménage. 
+Globalement, les femmes sont plus nombreuses à s'occuper du menage selon les resultas obténus. Environ 7,2% des interrogés consacrent entre plus de 3h par jour pour cette tâche dont 5,8% sont les femmes.
 
 
 
@@ -1360,6 +1294,7 @@ t_conf_df %>%
 ```
 
 
+Au moment de la prémière vague de l'enquete un quart (26%) de la population s'exprime négativement concernant le confinement. En effet, environ 7% le voient comme la perte de temps et pour 19% c'est une experience qui fatigue les nerfs. Quelques mois après le confinement, le nombre des personnes avec ces opinions atteint 36%.  
 
 ```{r}
 #coco1_q64: Stress lié au confinement 
@@ -1378,5 +1313,114 @@ coco1$conf_stress <- fct_stress_conf(coco1$coco1_q64)
 wtd.table(coco1$conf_stress, coco1$sexe, weights = coco1$coco1_POIDS, exclude = "9999",,useNA = "ifany") %>%
   prop(digits=1)
 
-#remarque: 
+#remarque:
+
 ```
+Par ailleurs, pour la moitié de la population le confinement est une expérience assez ou énormèment stressante(sur l'échelle de 0 à 10 ils ont choisi 6,7,8,9 ou 10). Seulement 7% des personnes considèrent que le confinèment n'est pas du tout stressant pour elles(0). Selon les résultats obténus, les femmes et les hommes sont affecté par le confinement presque de la même  manière.
+
+*Avis télétravail(vague6)*
+coco6_Q132_1: Avis télétravail : permet d'optimiser sa journée
+coco6_Q132_2: Avis télétravail : permet de se concentrer
+coco6_Q132_3: Avis télétravail : mélange trop vie privée et vie professionnelle
+coco6_Q132_4: Avis télétravail : diminue efficacité
+
+```{r}
+# coco6_Q132_1: Avis télétravail : permet d'optimiser sa journée
+
+fct_avis_teletravail <- function(x){
+  recod <- fct_collapse(factor(x),
+  "Oui"="1", 
+  "Non"= "2",
+  "PDR" = "9999")
+  return(recod)
+}
+
+coco6$avis1 <- fct_avis_teletravail(coco6$coco6_Q132_1)
+
+wtd.table(coco6$avis1, coco6$sexe, weights = coco6$POIDS_coco6, exclude = "PDR",useNA = "ifany") %>%
+  prop(digits=1)
+
+```
+
+
+```{r}
+# coco6_Q132_2: coco6_Q132_2: Avis télétravail : permet de se concentrer
+
+coco6$avis2 <- fct_avis_teletravail(coco6$coco6_Q132_2)
+
+wtd.table(coco6$avis2, coco6$sexe, weights = coco6$POIDS_coco6, exclude = "PDR",useNA = "ifany") %>%
+  prop(digits=1)
+```
+
+
+```{r}
+#coco6_Q132_3: Avis télétravail : mélange trop vie privée et vie professionnelle
+
+coco6$avis3 <- fct_avis_teletravail(coco6$coco6_Q132_3)
+
+wtd.table(coco6$avis3, coco6$sexe, weights = coco6$POIDS_coco6, exclude = "PDR",useNA = "ifany") %>%
+  prop(digits=1)
+```
+
+```{r}
+#coco6_Q132_4: Avis télétravail : diminue efficacité
+
+coco6$avis4 <- fct_avis_teletravail(coco6$coco6_Q132_4)
+
+wtd.table(coco6$avis4, coco6$sexe, weights = coco6$POIDS_coco6, exclude = "PDR",useNA = "ifany") %>%
+  prop(digits=1)
+```
+
+
+Concernant l'avis sur le télétravail, la majorité des répondant pense que ce mode de travail permets d'optimiser sa journée(62%). Par contre, pour le reste de la population ce n'est pas le cas. Par ailleurs, 75% repondent négativement quand on leur demande si le télétravail permets de se concentrer et 35% pensent que le télétravail rend la conciliation de la vie privée avec la vie professionnelle plus compliquée puisque les limites entre les deux disparaissent. Pour 15% de la population le télétravail est également le source une source de la baisse de l'efficacité. 
+
+
+
+*Avis sur quotidien(vague6)*
+coco6_Q200_2: Avis sur quotidien : journées denses
+coco6_Q200_3: Avis sur quotidien : permet de profiter de la vie
+coco6_Q200_4: Avis sur quotidien : stress intense
+
+
+```{r}
+#coco6_Q200_2: Avis sur quotidien : journées denses
+
+fct_avis_quotidien <- function(x){
+  recod <- fct_collapse(factor(x),
+  "Tout à fait d'accord" = "1",
+  "Plutôt d'accord" = "2",
+  "Plutôt pas d'accord" = "3",
+  "Pas du tout d'accord" = "4",
+  "PDR" = "9999")
+  return(recod)
+}
+
+coco6$avis_q1 <- fct_avis_quotidien(coco6$coco6_Q200_2)
+
+wtd.table(coco6$avis_q1, coco6$sexe, weights = coco6$POIDS_coco6, exclude = "PDR",useNA = "ifany") %>%
+  prop(digits=1)
+```
+
+
+```{r}
+#coco6_Q200_3: Avis sur quotidien : permet de profiter de la vie
+
+coco6$avis_q2 <- fct_avis_quotidien(coco6$coco6_Q200_3)
+
+wtd.table(coco6$avis_q2, coco6$sexe, weights = coco6$POIDS_coco6, exclude = "PDR",useNA = "ifany") %>%
+  prop(digits=1)
+```
+
+
+```{r}
+#coco6_Q200_4: Avis sur quotidien : stress intense
+
+coco6$avis_q3 <- fct_avis_quotidien(coco6$coco6_Q200_4)
+
+wtd.table(coco6$avis_q3, coco6$sexe, weights = coco6$POIDS_coco6, exclude = "PDR",useNA = "ifany") %>%
+  prop(digits=1)
+```
+
+
+
+
