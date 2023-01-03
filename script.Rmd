@@ -223,8 +223,9 @@ couple_df %>%
             locations = cells_body(columns = c(4,7)))
 ```
 
-La cohabitation des couples est ensuite comparée.
-La cohabitation en couple est répartie à peu près à parts égales entre les sexes. Cependant, dans les couples non cohabitants, les femmes sont environ 60% plus nombreuses que les hommes, tant à la vague 1 qu'à la vague 6. Et de la vague 1 à la vague 6, le couple non cohabitant a diminué de 3% chez les hommes, alors qu'il a augmenté de 4% chez les femmes. Ce changement n'est pas très important, mais le fait qu'il y ait une augmentation ou une diminution, plutôt qu'une diminution des deux, suggère qu'il y a un facteur en jeu.
+Les taux de cohabitation des couples sont ensuite comparés.
+La cohabitation au sein des couples est presque également répartie entre les hommes et les femmes. Et tant pour les hommes que pour les femmes, le nombre de couples non cohabitants était d'environ 3,5% pour les hommes et 4,8% pour les femmes lors de la vague 1. Cela n'a pas beaucoup changé lors de la vague 6.
+Les résultats montrent qu'il est fréquent que les couples vivent ensemble. Et le confinement n'a pas été un facteur de promotion de la cohabitation.
 
 
 ## Les sentiments negatifs
@@ -402,7 +403,7 @@ ggplot()+
   geom_bar(position="fill")
 
 #fusionner les deux vagues
-s_nerveux <- cbind(nerveux6, nerveux6)
+s_nerveux <- cbind(nerveux1, nerveux6)
 #presenter le tableau
 
 s_nerveux_df <- as.data.frame(s_nerveux)
@@ -438,7 +439,7 @@ decourage6<-wtd.table(coco6$decourage,coco6$sexe,
 coco1 %>% 
   filter(is.na(decourage)==F) %>% 
 ggplot()+
-  aes(fill=nerveux, x=sexe)+
+  aes(fill=decourage, x=sexe)+
   geom_bar(position="fill")
 ```
 
@@ -446,11 +447,11 @@ ggplot()+
 coco6 %>% 
   filter(is.na(decourage)==F) %>% 
 ggplot()+
-  aes(fill=nerveux, x=sexe)+
+  aes(fill=decourage, x=sexe)+
   geom_bar(position="fill")
 
 #fusionner les deux vagues
-s_decourage <- cbind(decourage6, decourage6)
+s_decourage <- cbind(decourage1, decourage6)
 #presenter le tableau
 
 s_decourage_df <- as.data.frame(s_decourage)
@@ -485,7 +486,7 @@ triste6 <- wtd.table(coco6$triste,coco6$sexe,
 coco1 %>% 
   filter(is.na(triste)==F) %>% 
 ggplot()+
-  aes(fill=nerveux, x=sexe)+
+  aes(fill=triste, x=sexe)+
   geom_bar(position="fill")
 ```
 
@@ -493,7 +494,7 @@ ggplot()+
 coco6 %>% 
   filter(is.na(triste)==F) %>% 
 ggplot()+
-  aes(fill=nerveux, x=sexe)+
+  aes(fill=triste, x=sexe)+
   geom_bar(position="fill")
 
 #fusionner les deux vagues
@@ -518,8 +519,8 @@ s_triste_df %>%
 Enfin, il y a la trisetesse. Il n'y a pas de changement significatif dans la proportion d'homme et de femmes qui se sentent toujours seuls. Un peu plus de femmes que d'hommes se sentent toujours seuls. 
 
 
-Dans les vagues précédentes de solitude, de nervosité et de décourage, les hommes avaient toujours ces sentiments dans la première vague, mais dans la sixième vague, on a cnstaté que les femmes avaient tendance à avoir ces sentiments plus fortement ou elles ne changent rien. Cela signifie qu'il y a une raison pour que les femmes éprouvent plus fortement ces sentiments négatifs.
-La trisetesse, en revanche, tend à être un sentiment constant de triste, quel que soit le sexe.
+Dans les vagues précédentes de solitude, de nervosité et de décourage, les femmes avaient toujours ces sentiments ("Souvent") dans la première vague, mais dans la sixième vague, on a cnstaté que les femmes avaient tendance à avoir ces sentiments plus fortement ou elles ne changent rien. Cela signifie qu'il y a une raison pour que les femmes éprouvent plus fortement ces sentiments négatifs.
+La trisetesse, en revanche, tend à être un sentiment constant de triste, quel que soit le sexe. 
 
 ## Les facteurs qui affecte (éventuellement) le bien-être et la santé mentale 
 
@@ -1056,3 +1057,7 @@ reg_sff <- left_join(reg_sf, anx, by =c("code_insee" = "reg"))
 ```
 
 # Conclusion 
+
+Les émotions négatives ressenties lors du confinement étaient fondamentalement plus fortement ressenties par les femmes (" Souvent " était plus répandu que chez les hommes). On suppose donc qu'il y a un certain élément de cela. Nous avons donc examiné la santé physique. L'obésité était plus répandue chez les hommes, tandis que, contrairement aux hommes, les femmes étaient plus susceptibles de peser moins de 75 kg. En revanche, le sport est pratiqué plusieurs fois par semaine par les femmes. Le temps de sommeil ne varie pas non plus de manière significative entre les hommes et les femmes. En d'autres termes, il n'y a pas de différence significative entre les hommes et les femmes en termes de santé physique, et cela n'est pas dû à la mentalité négative des femmes. Le suivant est La vie sociale. A l'exception de ceux qui sont restés deux semaines avant l'enquête, les répondants n'ont pas vu leurs amis ou leur famille (ils ne les ont pas rencontrés physiquement). En d'autres termes, nous ne constatons aucune différence entre les hommes et les femmes. Ensuite, il y a le temps consacré aux tâches ménagères. Cela représente plus de temps consacré aux tâches ménagères par les femmes que par les hommes. Cela suggère que le temps consacré aux tâches ménagères peut être un facteur négatif pour les femmes de cette étude. Toutefois, il ne s'agit pas d'un facteur majeur.
+Pour les hommes comme pour les femmes, le confinement lui-même a un impact sur eux. Le télétravail est source de stress pour les hommes et les femmes car leur vie privée et leur lieu de travail sont mélangés. Les relations sociales n'ont pas changé de manière significative, c'est-à-dire que la communication se fait avec les mêmes personnes. Et par le test khi-2, nous pouvons conclure que les différences entre les hommes et les femmes sont liées au stress et aux sentiments négatifs qu'ils éprouvent.
+On peut dire que les différences entre les sexes, et non les facteurs externes (confinement, télétravail, tâches ménagères, sports, sommeil, etc).
