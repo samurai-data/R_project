@@ -9,298 +9,22 @@ output:
     toc_depth : '3' # Précision de la table des matières
     toc_float: true # Laisser la table des matières constamment
 ---
-# Checklist - Rappel des consignes pour le dossier
 
-Il s’agira d’un dossier en groupe de 2 à 4 étudiant·es au choix à partir de données fournies et à rechercher autour d’une même thématique. Le dossier rendu sera :
+```{r,warning=FALSE}
 
-- (OK) un document (.odt, .pdf ou **.html**)
-- rédigé de 4 à 6 pages
-- (OK) à partir d’un fichier .Rmd
-- (OK) comportant au moins une carte
-- présentant des résultats pondérés
-- et au moins un test statistique.
--> Vous m’enverrez le document produit et le script .Rmd au plus tard **le 03/01/23** à mon adresse mail cecile.rodrigues@univ-lille.fr (vous aurez un accusé de réception sous 24h).
-
-Attendus
-
-- Au moins 2 vagues de coco (conseil 1 et 6)
-- Résultats pondérés
-- Au moins un test statistique
-- Pas d’énumération de tests ou de tableaux sans réflexion, fil directeur et interprétation
-- Recherche de données géographiques pertinentes (voir data.gouv.fr)
-- Au moins une carte
-- Données transmises : coco - vague 1 à coco - vague 6, les autres vagues, fonds départements et communes
-
-# Présentation du sujet et de nos hypothèses sociologiques
-Sujet : La charge mentale des femmes face au Covid
-
-Définition : la charge mentale entrait dans l’édition 2020 du Larousse, définie comme « poids psychologique que fait peser (plus particulièrement sur les femmes) la gestion des tâches domestiques et éducatives, engendrant une fatigue physique et, surtout, psychique ».
-
-"C'est devoir penser à tout, tout le temps, et pour tout le monde. C'est l'impression de devoir tout gérer, d'avoir l'impression aussi de devoir être parfait sur tous les fronts -sans réussir à tirer la sonnette d'alarme quand il faudrait- en pensant que tout repose sur ses propres épaules" détaille Laurence Bourgeois. 
-
-Références :
-https://www.europarl.europa.eu/RegData/etudes/BRIE/2022/719547/IPOL_BRI(2022)719547_FR.pdf
-https://lejournal.cnrs.fr/nos-blogs/dialogues-economiques/la-charge-mentale-une-double-peine-pour-les-femmes
-https://start.lesechos.fr/societe/egalite-diversite/charge-mentale-le-travail-domestique-des-meres-a-double-pendant-la-crise-selon-le-bcg-1295877
-https://www.lecrsa.ca/wp-content/uploads/2022/04/RAPPORT_Charge-mentale_F_P-S.pdf
-https://www.francetvinfo.fr/sante/maladie/coronavirus/il-ne-sait-pas-ce-que-c-est-que-de-gerer-les-enfants-a-la-maison-avec-le-covid-19-la-charge-mentale-pese-plus-lourd-sur-les-femmes_4328609.html
-
-## Carte graphique : 
-Données : https://www.data.gouv.fr/fr/datasets/chiffres-cles-concernant-lepidemie-de-covid19-en-france/
-Fond de carte : fichier sous zip
-
-## Données nécessaires et variables pertinentes - suggestion 
-- Caratèristique socio-démograpghie de l'individu
-  + Age décennal en 7 classes : cal_AGE1
-  + Sexe : eayy_A1
-  + Niveau de formation du I au VI (rép+conj) : eayy_B18C et eayy_B18CCJT
-  + En activité : oui/non (rép+conj) : eayy_B1B et eayy_B1BCJT
-  + Groupe socioprofessionnel en 6 postes (rép+conj) : eayy_PCS6 et eayy_PCS6CJT 
-- Information du ménage
-  + Type de ménage, 5 types (une seule personne/ monoparentale/ couple sans/ avec enfant/ complexe) : eayy_TYPMEN5
-  + Nombre d'enfants cohabitants (0/1/2/3+/Non concerné) : eayy_C8B_rec
-  + area >=25 m2 par personne (oui/non) : coco1_q26
-  + Revenu mensuel par unité de consommation en 10 classes : eayy_E2AUC
-- L'impact du télétravail et du confinement
-  + Les sentiments négatifs (nerveux : Q16, découragé : Q17, triste : Q19), sentiment de solitude : eayy_F4 
-  + Avis sur quotidien : journées denses : coco6_Q200_2 et stresse intense : coco6_Q200_4
-  + Avis télétravail : permet de se concentrer : coco6_Q132_2, mélange trop vie privée et vie professionnelle : coco6_Q132_3
-  + coco6_Q62mod: Expérience du confinement
-  + coco6_Q25: Tensions au sein du ménage
-- La division des tâches domestiques actuellement (toujours/souvent/parfois/jamais)
-  + coco6_q135_1: Se charge de la cuisine ego, coco6_q135_2: conjoint.e
-  + coco6_q136_1: Se charge des courses ego, coco6_q136_2: conjoint.e
-  + coco6_q137_1: Se charge de la lessive ego, coco6_q137_2: conjoint.e
-- Les tâches fait par répondant
-  + coco6_Q51: Fréquence de la surveillance des travaux scolaires des enfants
-  + coco6_q59_2: Temps consacré à : s’occuper de ses enfants
-  + coco6_q59_3: Temps consacré à : prendre soin de personnes fragiles ou vulnérables
-  + coco6_q59_4: Temps consacré à : exercer son activité professionnelle
-- Les activités recréatives ou reposantes 
-  + coco6_q59_5: Temps consacré à : faire des exercices physiques / du sport
-  + coco6_q59_6: Temps consacré à : dormir
- 
-# Historique des étapes sur R
-## Télécharger les packages
-```{r}
 library(tidyverse)
 library(questionr)
 library(readr)
 library(knitr)
 library(kableExtra)
-```
-*Les données : coco1 et coco6*
-```{r}
+library(ggplot2)
+#library(gt)
 coco1 <- read.csv("fr.cdsp.ddi.elipss.202004coco1.csv")
-```
-
-```{r}
 coco6 <- read.csv("fr.cdsp.ddi.elipss.202010.csv")
 ```
 
-## Choisir les variables
 
-### Charactères socio-démographiques de l'individu 
-```{r}
-## eayy_A1: Sexe (enquête annuelle)
-coco1$sexe <- fct_recode(
-  factor(coco1$eayy_A1),
-  "Homme"="1", "Femme"="2")
-freq(coco1$sexe, total= T, valid=F)
-```
-```{r}
-## eayy_A2A_rec: Age quinquennal (recodage) à 2018
-coco1$age <- fct_recode(factor(coco1$eayy_A2A_rec),
-  "Moins de 24"="4", "De 25 à 29 ans"="5", 
-  "De 30 à 34 ans"="6", "De 35 à 39 ans"="7",
-  "De 40 à 44 ans"="8", "De 45 à 49 ans"="9",
-  "De 50 à 54 ans"="10", "De 55 à 59 ans"="11",
-  "De 60 à 64 ans"="12", "De 65 à 69 ans"="13",
-  "70 ans et plus"="14")
-freq(coco1$age, total= T, valid=F)
-```
-```{r}
-## eayy_A5: Vit en couple
-coco1$couple <- fct_recode(factor(coco1$eayy_A5),
-  "Couple cohabitation"="1", 
-  "Couple non-cohabitation"="2", 
-  "Ne pas en couple"="3")
-freq(coco1$couple, total= T, valid=F)
-```
-### Information de la ménage 
-```{r}
-## eayy_C1_rec: Nombre de personnes dans le foyer (recodage)
-freq(coco1$eayy_C1_rec, total= T, valid=F)
-```
-```{r}
-## eayy_C8B_rec: Nombre d'enfants cohabitants (recodage)
-coco1$enfants_cohabitation <- fct_recode(factor(coco1$eayy_C8B_rec),
-  "0 enfant"="1", 
-  "1 enfant"="2", 
-  "2 enfants"="3",
-  "3 enfants ou plus"="4",
-  "Ne pas avoir d'enfant" = "6")
-freq(coco1$enfants_cohabitation, total= T, valid=F)
-```
-
-### Les sentiments
-```{r}
-# Créer la fonction
-fct_freq_senti <- function(x){
-  recod <- fct_collapse(factor(x),
-  "En permanence"="1", 
-  "Souvent"="2", 
-  "Quelques fois"="3",
-  "Rarement"="4",
-  "Jamais" = "5")
-  return(recod)
-}
-# Recodage
-coco1$nerveux <- fct_freq_senti(coco1$coco1_q16)
-coco1$decourage <- fct_freq_senti(coco1$coco1_q17)
-coco1$triste <- fct_freq_senti(coco1$coco1_q19)
-```
-
-### Les tâches
-**Fréquences des activités concernantes la vie sociale Pendant les deux dernières semaines**
-
-```{r}
-# Créer la fonction
-fct_freq_actvt <- function(x){
-  recod <- fct_collapse(factor(x),
-  "8 fois ou plus"="1", 
-  "Entre 5 et 7 fois"="2", 
-  "3 ou 4 fois"="3",
-  "1 ou 2 fois"="4",
-  "Jamais" = "5")
-  return(recod)
-}
-# Recodage
-# Rencontres les amis ou famille, dans la vie réelle ou virtuelle
-coco1$rencontres_amis_reel <- fct_freq_actvt(coco1$coco1_q52_1)
-coco1$rencontres_amis_vir <- fct_freq_actvt(coco1$coco1_q52_2)
-coco1$rencontres_famille_reel <- fct_freq_actvt(coco1$coco1_q52_3)
-coco1$rencontres_famille_vir <- fct_freq_actvt(coco1$coco1_q52_4)
-# Contacts avec la famille, des amis, des collègues à l'étranger
-coco1$contacts_etr_famille <- fct_freq_actvt(coco1$coco1_q53_1)
-coco1$contacts_etr_amis <- fct_freq_actvt(coco1$coco1_q53_2)
-coco1$contacts_etr_collegues <- fct_freq_actvt(coco1$coco1_q53_3)
-```
-
-**Temps consacré pour les activités**
-
-Fonction
-```{r}
-fct_temps_actvt <- function(x){
-  recod <- fct_collapse(factor(x),
-  "Je n’ai pas fait cette activité"="1", 
-  "Entre 0 et 1 heure"="2", 
-  "Entre 1 et 2 heures"="3",
-  "Entre 2 et 3 heures"="4",
-  "Entre 3 et 4 heures"="5",
-  "Entre 4 et 6 heures"="6",
-  "Entre 6 et 8 heures"="7",
-  "Entre 8 et 10 heures"="8",
-  "Plus de 10 heures" = "9")
-  return(recod)
-}
-```
-
-Recodage
-```{r}
-# faire du ménage
-coco1$tache_1 <- fct_temps_actvt(coco1$coco1_q59_1)
-# s’occuper de ses enfants
-coco1$tache_2 <- fct_temps_actvt(coco1$coco1_q59_2)
-# prendre soin de personnes fragiles
-coco1$tache_3 <- fct_temps_actvt(coco1$coco1_q59_3)
-# exercer son activité professionnelle
-coco1$tache_4 <- fct_temps_actvt(coco1$coco1_q59_4)
-# faire des exercices physiques / du sport
-coco1$tache_5 <- fct_temps_actvt(coco1$coco1_q59_5)
-# dormir
-coco1$tache_6 <- fct_temps_actvt(coco1$coco1_q59_6)
-# parler au téléphone
-coco1$tache_7 <- fct_temps_actvt(coco1$coco1_q59_7)
-
-```
-
-**Temps consacré pour les activités par rapport à l'habitude**
-
-- 1 Beaucoup moins que d’habitude
-- 2 Un peu moins que d’habitude 
-- 3 Autant que d’habitude 
-- 4 Un peu plus que d’habitude
-- 5 Beaucoup plus que d’habitude
-- 6 Non concerné(e)
-- 9999 N'a pas répondu
-
-*Les tâches*
-
-- coco1_q61_1: Temps consacré par rapport à l'habitude à : faire du ménage
-- coco1_q61_2: Temps consacré par rapport à l'habitude à : s’occuper - de ses enfants
-- coco1_q61_3: Temps consacré par rapport à l'habitude à : prendre soin de personnes fragiles ou vulnérables
-- coco1_q61_7: Temps consacré par rapport à l'habitude à : parler au téléphone
-- coco1_q61_6: Temps consacré par rapport à l'habitude à : dormir
-- coco1_q61_5: Temps consacré par rapport à l'habitude à : faire des exercices physiques / du sport
-
-# Résultat produit et commentaires
-## La repartition des tâches selon le sexe
-
-En croiser les activités sociales avec le sexe, on voit que les femmes sont plus nombreux à garder les contacts avec leur famille pour donner les conseils, du confort. Elles les font plus souvent peut être pour exercer leur rôle de 'care giver' d'une femme selon les rapports sociaux de sexe. 
-
-**La frequence des rencontres avec la famille dans la vraie vie selon sexe**
-```{r}
-lprop(table(coco1$sexe, coco1$rencontres_famille_reel, exclude="9999"))
-```
-
-**La frequence des rencontres avec la famille dans la vie virtuelle selon sexe**
-
-```{r}
-lprop(table(coco1$sexe, coco1$rencontres_famille_vir, exclude="9999"))
-```
-**La frequence des contacts avec la famille à l'étranger selon sexe**
-```{r}
-lprop(table(coco1$sexe, coco1$contacts_etr_famille, exclude="6"))
-```
-
-
-**Les femmes consacrent plus de temps à prendre soins de personnes fragiles ou vulnérables**
-```{r}
-rprop(table(coco1$sexe, coco1$tache_3, exclude="9999"))
-```
-
-**Les femmes passent plus de temps à s'occuper des enfants : 13,3 % des femmes consacrent plus de 6h par jour contre 5 % des hommes**
-
-```{r}
-rprop(table(coco1$sexe, coco1$tache_2, exclude="9999"))
-```
-**Tâches ménagères : 22,3 % des femmes passent plus de 2h à faire les tâches ménagères contre 10,2 % des hommes au cours de 2 dernières semaines. Il y a même 15 % des hommes qui ne l'ont pas fait.**
-```{r}
-rprop(table(coco1$sexe, coco1$tache_1, exclude="9999"))
-```
-
-## Le profil des femmes avec le plus de charge mentale
-
-Croiser avec 
-
-- la situation conjugale (en couple ou pas) 
-- l'information du ménage (vit avec qui)
-- position professionnelle d'elle et de son conjoint
-
-# Bibliographie 
-https://lejournal.cnrs.fr/nos-blogs/dialogues-economiques/la-charge-mentale-une-double-peine-pour-les-femmes
-
-# Donnée surpprimentaire
-https://www.data.gouv.fr/fr/pages/donnees-coronavirus/
-
-
-
-
-#####################################################
-#####################################################
-
-### Introduction
+# Introduction
 
 La santé mentale est un sujet crucial du XXIème siècle qui est devenu un enjeu majeur lors de la pandémie du COVID-19. Des nombreuses études montrent que la pandémie du COVID-19 a entrainé une hausse mondiale des problèmes de santé mentales, y compris la dépression et l’anxiété généralisée.  
 
@@ -316,9 +40,7 @@ La base de données utilisée pour notre étude provient de l’enquête Coping 
 Dans un premier temps, nous allons présenter le profil général de la population observée ainsi que les variables déterminantes du bien-être et de la santé mentale. Ensuite, nous allons nous concentrer sur les facteurs qui peuvent avoir un impact sur la santé mentale des personnes enquêtées. Enfin, nous allons présenter les résultats principaux de notre étude dans la partie finale de notre dossier.  
 
 
-###############Nao################
-
-# preparation des données et des library
+*Preparation des données et library*
 ```{r,warning=FALSE}
 
 library(tidyverse)
@@ -328,11 +50,48 @@ library(knitr)
 library(kableExtra)
 library(ggplot2)
 library(gt)
+library(tibble)
+
 coco1 <- read.csv("fr.cdsp.ddi.elipss.202004coco1.csv")
 coco6 <- read.csv("fr.cdsp.ddi.elipss.202010.csv")
 ```
 
-# sexe
+## carte
+
+```{r,warning=FALSE}
+# install.packages(c("sf", "geojsonio","ggspatial"))
+library(sf)
+#library(geojsonio)#peut être on en a pas besoin 
+library(ggspatial)
+# Import du fichier shp :
+dep <- st_read(dsn="C:/Users/white/OneDrive/Documents/GitHub/R_project/departements/departements-20180101.shp")# faut changer 
+class(dep)ger 
+class(dep)
+reg<- st_read(dsn="C:/Users/white/OneDrive/Documents/GitHub/R_project/regions/regions-20180101.shp")
+class(reg)
+```
+
+```{r}
+names(dep)
+names(reg)
+```
+
+```{r}
+dep_g <- st_transform(dep,crs=2154)
+reg_g <- st_transform(reg,crs=2154)
+```
+
+```{r}
+ggplot()+
+  geom_sf(data=dep_g)+
+  geom_sf(data=reg_g)
+```
+
+
+
+# L’étude des caractéristiques socio des femmes pour décrire notre population
+##  La sexe et l'âge
+### sexe
 ```{r}
 fct_freq_sexe <- function(x){
   recod <- fct_collapse(factor(x),
@@ -348,26 +107,11 @@ coco6$sexe <- fct_freq_sexe(coco6$eayy_A1)
 freq(coco1$sexe, total= T, valid=F)
 freq(coco6$sexe, total= T, valid=F)
 
-# poids de sexe par vague1 
-wtd.table(coco1$sexe, weights = coco1$coco1_POIDS,
-          useNA = "ifany")
-
-wtd.table(coco1$sexe, weights = coco1$coco1_POIDS,
-          useNA = "ifany") %>% 
-  round()#<<
-
 #poids de pourcentagesde sexe par vague1 
 round(wtd.table(coco1$sexe, weights = coco1$coco1_POIDS,
           useNA = "ifany") %>% 
   prop.table()*100,1)#<<
 
-# # poids de sexe par vague6 
-wtd.table(coco6$sexe, weights = coco6$POIDS_coco6,
-          useNA = "ifany")
-
-wtd.table(coco6$sexe, weights = coco6$POIDS_coco6,
-          useNA = "ifany") %>% 
-  round()#<<
 
 #poids de pourcentagesde sexe par vague6 
 round(wtd.table(coco6$sexe, weights = coco6$POIDS_coco6,
@@ -375,17 +119,15 @@ round(wtd.table(coco6$sexe, weights = coco6$POIDS_coco6,
   prop.table()*100,1)#<<
 ```
 
-# ages
+### ages
 ```{r}
-
 fct_freq_age <- function(x){
   recod <- fct_collapse(factor(x),
-  "Moins de 24"="4", "De 25 à 29 ans"="5", 
-                        "De 30 à 34 ans"="6", "De 35 à 39 ans"="7",
-                        "De 40 à 44 ans"="8", "De 45 à 49 ans"="9",
-                        "De 50 à 54 ans"="10", "De 55 à 59 ans"="11",
-                        "De 60 à 64 ans"="12", "De 65 à 69 ans"="13",
-                        "70 ans et plus"="14")
+                        "Moins de 29 ans"=c("4","5"), 
+                        "De 30 à 39 ans"=c("6","7"), 
+                        "De 40 à 49 ans"=c("8","9"), 
+                        "De 50 à 59 ans"=c("10","11"),
+                        "Plus de 60 ans"=c("12","13","14"))
   return(recod)
 }
 
@@ -413,7 +155,7 @@ pop_vague1
 pop_vague6
 ```
 
-## fusionner les deux vagues(population de l'etude)
+## La population de l'etude entre la sexe et l'âge
 ```{r}
 #fusionner les deux vagues
 pop_vague <- cbind(pop_vague1, pop_vague6)
@@ -434,7 +176,11 @@ pop_vague_df %>%
             locations = cells_body(columns = c(4,7)))
 ```
 
-# Groupe socioprofessionnel en 6 postes (rép+conj):eayy_PCS6 et eayy_PCS6CJT
+Les répondants à notre enquête proviennent des vagues 1 et 6. Le rapport entre les sexes est de 49:51 dans les deux cas, avec une proportion légèrement plus élevée de femmes.
+En conséquence, si l'on considère le rapport hommes/femmes par groupe d'âge, on constate que, tant pour la première que pour la sixième vague, la proportion de femmes est supérieure à celle des hommes de moins de 49 ans. En particulier, une grande différence peut être observée lors de la première vague, où 39.4% des hommes et 60.6% des femmes sont âgés de moins de 29 ans, et lors de la sixième vague, où 39.5% des hommes et 60.5% des femmes sont âgés de 30 à 39 ans.3 Les analyses futures devraient tenir compte du rapport entre les hommes et les femmes de moins de 49 ans.
+
+## La socio-profession
+### Groupe socio-professionnel en 6 postes :eayy_PCS6
 ```{r, warning=FALSE}
 fct_freq_sociopro <- function(x){
   recod <- fct_collapse(factor(x),
@@ -455,7 +201,7 @@ coco6$sociopro <- fct_freq_sociopro(coco6$eayy_PCS6)
 
 ```
 
-# L'étude des caractéristiques socio des femmes pour décrire notre population
+### L'étude des caractéristiques socio des femmes pour décrire notre population
 ```{r}
 
 # vague 1
@@ -472,7 +218,6 @@ popsoc_vague6
 
 ```
 
-## fusionner les deux vagues(population de socio-profession)
 ```{r}
 #fusionner les deux vagues
 popsoc_vague <- cbind(popsoc_vague1, popsoc_vague6)
@@ -493,8 +238,10 @@ pop_vague_df %>%
             locations = cells_body(columns = c(4,7)))
 ```
 
+Des comparaisons ont été faites entre les professions des hommes et des femmes interrogés. Trois professions distinctes ont été identifiées : cadres et professions intellectuelles supérieures, professions intermédiaires et employés. cadres et professions Les Cadres et professions intellectuelles supérieures sont à prédominance masculine plutôt que féminine. Les employés, en revanche, sont beaucoup plus nombreux chez les femmes que chez les hommes. Et les professions intermédiaires sont moins sexistes. Cette classification des professions montre que les hommes sont plus susceptibles d'avoir un travail physique et un statut élevé, tandis que les femmes sont plus susceptibles d'avoir des Employés.
+Il s'agit d'une tendance observée à la fois dans la vague 1 et la vague 6. Cela signifie que le confinement n'a aucun impact sur les professions.
 
-# vie en couple
+## Vie en couple
 
 ```{r}
 fct_freq_couple <- function(x){
@@ -547,23 +294,15 @@ couple_df %>%
   tab_style(style = list(cell_text(weight = "bold")),
             locations = cells_body(columns = c(4,7)))
 ```
-
-
-
-
-# Commentaire 
-
-Les répondants à notre enquête proviennent des vagues 1 et 6. Le rapport entre les sexes est de 49:51 dans les deux cas, avec une proportion légèrement plus élevée de femmes.
-En conséquence, si l'on considère le rapport hommes/femmes par groupe d'âge, on constate que, tant pour la première que pour la sixième vague, la proportion de femmes est supérieure à celle des hommes de moins de 45 ans. En particulier, une grande différence peut être observée lors de la première vague, où 34,4% des hommes et 65,5% des femmes sont âgés de 25 à 29 ans, et lors de la sixième vague, où 8,2% des hommes et 61,8% des femmes sont âgés de 30 à 34 ans.3 Les analyses futures devraient tenir compte du rapport entre les hommes et les femmes de moins de 45 ans.
-
-Des comparaisons ont été faites entre les professions des hommes et des femmes interrogés. Trois professions distinctes ont été identifiées : cadres et professions intellectuelles supérieures, professions intermédiaires et employés. cadres et professions Les Cadres et professions intellectuelles supérieures sont à prédominance masculine plutôt que féminine. Les employés, en revanche, sont beaucoup plus nombreux chez les femmes que chez les hommes. Et les professions intermédiaires sont moins sexistes. Cette classification des professions montre que les hommes sont plus susceptibles d'avoir un travail physique et un statut élevé, tandis que les femmes sont plus susceptibles d'avoir des Employés.
-Il s'agit d'une tendance observée à la fois dans la vague 1 et la vague 6. Cela signifie que le confinement n'a aucun impact sur les professions.
-
 La cohabitation des couples est ensuite comparée.
 La cohabitation en couple est répartie à peu près à parts égales entre les sexes. Cependant, dans les couples non cohabitants, les femmes sont environ 60% plus nombreuses que les hommes, tant à la vague 1 qu'à la vague 6. Et de la vague 1 à la vague 6, le couple non cohabitant a diminué de 3% chez les hommes, alors qu'il a augmenté de 4% chez les femmes. Ce changement n'est pas très important, mais le fait qu'il y ait une augmentation ou une diminution, plutôt qu'une diminution des deux, suggère qu'il y a un facteur en jeu.
 
+
 # Sentiment croise de pop femmes
-## solitude
+
+Comment les hommes et les femmes se sentent-ils chacun pendant le confinement ? Et y a-t-il des changements mentaux entre la première et la sixième vague ? On compare les différences entre les hommes et les femmes en fonction de quatre émotions : la solitude, la nervosité, le décourage et la tristesse, ainsi que lors de la première et de la sixième vague.
+
+## Solitude
 ```{r, warning=FALSE}
 # Créer la fonction solitude
 
@@ -586,14 +325,14 @@ coco6$solitude <- fct_freq_senti_solitude(coco6$coco6_Q21)
 ```{r}
 solitude1<-wtd.table(coco1$solitude,coco1$sexe,
           weights = coco1$coco1_POIDS, useNA = "ifany") %>% 
-  rprop(digits=1)
+  prop(digits=1)
 
 solitude6<-wtd.table(coco6$solitude,coco6$sexe,
           weights = coco6$POIDS_coco6, useNA = "ifany",exclude = "Ne sait pas") %>% 
-  rprop(digits=1)
+  prop(digits=1)
 ```
 
-#### graphique : solitude 
+#### *Graphique : Solitude* 
 ```{r}
 vg1_genre_solitude <- rprop(table(sexe=coco1$sexe,
             solitude=coco1$solitude))
@@ -645,7 +384,8 @@ ggplot()+
   aes(fill=solitude, x=sexe)+
   geom_bar(position="fill")
 ```
-#### tableau de comparaison : solitude
+
+### Tableau de comparaison : Solitude
 ```{r}
 #fusionner les deux vagues
 s_solitude <- cbind(solitude6, solitude6)
@@ -667,7 +407,10 @@ s_solitude_df %>%
 
 ```
 
-## fonction de sentiment 
+La première est la solitude. Lors de la première vague, 1,2% des hommes se sentaient fortement seuls. Cela signifie que lors de la première vague, les hommes se sont sentis plus fortement seuls que les femmes(0.6%). Cependant, lors de la sixième vague, ce chiffre était de 0.6%. Les hommes connaissent une tendance à la baisse de la solitude. Toutefois, la solitude des femmes ne change pas du tout. 
+
+## Degré des Nerveux, Decourage et Triste
+#### fonction de sentiment 
 
 ```{r,warning=FALSE}
 # Créer la fonction
@@ -694,18 +437,18 @@ coco6$triste <- fct_freq_senti(coco6$coco6_Q19)
 ```
 
 
-## nerveux
+## Nerveux
 ```{r}
 nerveux1<-wtd.table(coco1$nerveux,coco1$sexe,
           weights = coco1$coco1_POIDS, useNA = "ifany") %>% 
-  rprop(digits=1)
+  prop(digits=1)
 
 nerveux6<-wtd.table(coco6$nerveux,coco6$sexe,
           weights = coco6$POIDS_coco6, useNA = "ifany") %>% 
-  rprop(digits=1)
+  prop(digits=1)
 
 ```
-#### graphique : nerveux
+#### *Graphique : Nerveux*
 ```{r}
 coco1 %>% 
   filter(is.na(nerveux)==F) %>% 
@@ -723,21 +466,41 @@ ggplot()+
 
 ```
 
-#### tableau de comparaison : nerveux
+### Tableau de comparaison : Nerveux
+```{r}
+#fusionner les deux vagues
+s_nerveux <- cbind(nervex6, nerveux6)
+#presenter le tableau
 
-#decourage
+s_nerveux_df <- as.data.frame(s_nerveux)
+colnames(s_nerveux_df) <- c("Homme", "Femme", "Total", "homme", "femme", "total")
 
+s_nerveux_df <- rownames_to_column(s_nerveux_df, "Degré de nerveux")
+
+#library(gt)
+s_nerveux_df %>%
+  gt() %>%
+  tab_spanner(label = "Vague 1", columns = c(2, 3, 4)) %>%
+  tab_spanner(label = "Vague 6", columns = c(5, 6, 7)) %>%
+  tab_style(
+    style = list(cell_text(weight = "bold")),
+    locations = cells_body(columns = c(4,7)))
+```
+
+Ensuite, la nervosité. Si l'on compare les hommes et les femmes, le pourcentage d'hommes et de femmes qui sont toujours nerveux est la presque même lors de la vague1, mais cette tendance est plus forte chez les hommes. Cependant, lors de les vagues 1 et 6, en general, les femmes étaient toujours plus nerveuses que les hommes. Cela suggère que certains facteurs ont rendu les femmes plus négatives dans une période prolongée de confinement.
+
+## Decourage
 ```{r}
 decourage1<-wtd.table(coco1$decourage,coco1$sexe,
           weights = coco1$coco1_POIDS, useNA = "ifany") %>% 
-  rprop(digits=1)
+  prop(digits=1)
 
 decourage6<-wtd.table(coco6$decourage,coco6$sexe,
           weights = coco6$POIDS_coco6, useNA = "ifany") %>% 
-  rprop(digits=1)
+  prop(digits=1)
 ```
 
-#### graphique : decourage
+#### *Graphique : Decourage*
 ```{r}
 coco1 %>% 
   filter(is.na(decourage)==F) %>% 
@@ -754,7 +517,7 @@ ggplot()+
   geom_bar(position="fill")
 ```
 
-#### tableau de comparaison : decourage
+### Tableau de comparaison : Decourage
 ```{r}
 #fusionner les deux vagues
 s_decourage <- cbind(decourage6, decourage6)
@@ -776,7 +539,9 @@ s_decourage_df %>%
 
 ```
 
-#triste
+Et le découragement ne montre pas de différence significative entre les hommes et les femmes, mais la proportion de femmes de la vague 1 à la vague 6 augmente dans " souvent ", alors que la proportion d'hommes et de femmes qui ressentent le découragement " jamais " tend à diminuer. Le confinement n'a pas du tout d'impact sur les hommes et les femmes.
+
+## Triste
 ```{r}
 triste1 <- wtd.table(coco1$triste,coco1$sexe,
           weights = coco1$coco1_POIDS, useNA = "ifany") %>% 
@@ -786,7 +551,7 @@ triste6 <- wtd.table(coco6$triste,coco6$sexe,
           weights = coco6$POIDS_coco6, useNA = "ifany") %>% 
   prop(digits=1)
 ```
-#### graphique : triste
+#### *Graphique : triste*
 ```{r}
 coco1 %>% 
   filter(is.na(triste)==F) %>% 
@@ -803,7 +568,7 @@ ggplot()+
   geom_bar(position="fill")
 ```
 
-#### tableau de comparaison : triste
+### Tableau de comparaison : Triste
 ```{r}
 #fusionner les deux vagues
 s_triste <- cbind(triste1, triste6)
@@ -824,51 +589,14 @@ s_triste_df %>%
     locations = cells_body(columns = c(4,7)))
 
 ```
+Enfin, il y a la trisetesse. Il n'y a pas de changement significatif dans la proportion d'homme et de femmes qui se sentent toujours seuls. Un peu plus de femmes que d'hommes se sentent toujours seuls. 
 
-# commentaire
-Comment les hommes et les femmes se sentent-ils chacun pendant le confinement ? Et y a-t-il des changements mentaux entre la première et la sixième vague ? On compare les différences entre les hommes et les femmes en fonction de quatre émotions : la solitude, la nervosité, le décourage et la tristesse, ainsi que lors de la première et de la sixième vague.
-La première est la solitude. Lors de la première vague, 67,1% des hommes se sentaient fortement seuls. Cela signifie que lors de la première vague, les hommes se sont sentis plus fortement seuls que les femmes. Cependant, lors de la sixième vague, ce chiffre était de 48,8%. Les hommes connaissent une tendance à la baisse de la solitude. Toutefois, la solitude des femmes est en hausse, passant de 32,9 % à 51,2 %. Cela indique qu'il existe un facteur qui accroît la solitude chez les femmes.
-Ensuite, la nervosité. Si l'on compare les hommes et les femmes, le pourcentage d'hommes et de femmes qui sont toujours nerveux est le même lors de la première vague, mais cette tendance est plus forte chez les hommes. Cependant, lors de la sixième vague, les femmes étaient toujours plus nerveuses que les hommes. Cela suggère que certains facteurs ont rendu les femmes plus négatives dans une période prolongée de confinement.
-Ensuite la decourage. Cela inverse complètement la proportion d'hommes et de femmes se sentant decourage lors des première et sixième vagues. Lors de la première vague, 69,2% des hommes et 30,8% des femmes se sont toujours sentis découragés, tandis que lors de la sixième vague, 33,7% des hommes et 66,3% des femmes se sont toujours sentis découragés.
-Enfin, il y a la trisetesse. Il n'y a pas de changement significatif dans la proportion d'hommes et de femmes qui se sentent toujours seuls. Un peu plus d'hommes que de femmes se sentent toujours seuls. Toutefois, la proportion de femmes qui se sentent souvent seules est plus élevée.
 
-Dans les vagues précédentes de solitude, de nervosité et de décourage, les hommes avaient toujours ces sentiments dans la première vague, mais dans la sixième vague, on a cnstaté que les femmes avaient tendance à avoir ces sentiments plus fortement. Cela signifie qu'il y a une raison pour que les femmes éprouvent plus fortement ces sentiments négatifs.
+Dans les vagues précédentes de solitude, de nervosité et de décourage, les hommes avaient toujours ces sentiments dans la première vague, mais dans la sixième vague, on a cnstaté que les femmes avaient tendance à avoir ces sentiments plus fortement ou elles ne changent rien. Cela signifie qu'il y a une raison pour que les femmes éprouvent plus fortement ces sentiments négatifs.
 La trisetesse, en revanche, tend à être un sentiment constant de triste, quel que soit le sexe.
 
 
-# carte
 
-```{r,warning=FALSE}
-# install.packages(c("sf", "geojsonio","ggspatial"))
-library(sf)
-#library(geojsonio)#peut être on en a pas besoin 
-library(ggspatial)
-# Import du fichier shp :
-dep <- st_read(dsn="C:/Users/white/OneDrive/Documents/GitHub/R_project/departements/departements-20180101.shp")# faut changer 
-class(dep)ger 
-class(dep)
-reg<- st_read(dsn="C:/Users/white/OneDrive/Documents/GitHub/R_project/regions/regions-20180101.shp")
-class(reg)
-```
-
-```{r}
-names(dep)
-names(reg)
-```
-
-```{r}
-dep_g <- st_transform(dep,crs=2154)
-reg_g <- st_transform(reg,crs=2154)
-```
-
-```{r}
-ggplot()+
-  geom_sf(data=dep_g)+
-  geom_sf(data=reg_g)
-```
-
-## tester la carte mais ça marche pas
-###on a pas de une file geojson, donc on a une carte mais qu'est ce que l'on fait???
 
 
  
@@ -886,8 +614,7 @@ ggplot()+
 
 
 
-#########Inessa##############
-############################
+# l’impact sur la bien-être et la santé mentale 
 
 Maintenant on va observer les variables qui peuvent avoir un impact direct ou indirect sur le bien-être et la santé mentale de la population etudiée. Le choix de ces varibles répose sur les trois domaines suivants:
 
@@ -896,7 +623,7 @@ Maintenant on va observer les variables qui peuvent avoir un impact direct ou in
 - les activités de la vie quotidiennes, le confinement et le télétravail
 
 
-### Santé physique
+## Santé physique
 ```{r}
 #état de santé percu (Diriez-vous que, dans l'ensemble, votre santé est :)
 
@@ -928,8 +655,7 @@ sante_vague6 <- wtd.table(coco6$sante,coco6$sexe, weights = coco6$POIDS_coco6,
 ```
 
 
-
-
+### Tableau de comparaison : Etat de santé
 ```{r}
 #fusionner les deux vagues
 t_sante <- cbind(sante_vague1, sante_vague6)
@@ -938,10 +664,10 @@ t_sante <- cbind(sante_vague1, sante_vague6)
 t_sante_df <- as.data.frame(t_sante)
 colnames(t_sante_df) <- c("Homme", "Femme", "Total", "homme", "femme", "total")
 
-library(tibble)
+
 t_sante_df <- rownames_to_column(t_sante_df, "Etat de santé")
 
-library(gt)
+
 t_sante_df %>%
   gt() %>%
   tab_spanner(label = "Vague 1", columns = c(2, 3, 4)) %>%
@@ -952,7 +678,7 @@ t_sante_df %>%
 
 Les personnes interrogées se declarent majoritairement (~95%) en très bon, bon ou assez bon état de santé et il n'y a pas de differences significatives entre les deux vagues de l'enquete ainsi que entre les deux sexes. 
 
-
+### Poids pendant confinement
 ```{r}
 # coco1_q05_c: Poids en kg
 #recodage
@@ -985,6 +711,7 @@ poids6 <- wtd.table(coco6$poids,coco6$sexe, weights = coco6$POIDS_coco6,
 ```
 
 
+### Tableau de comparaison : Poinds
 ```{r}
 #fusionner les deux vagues
 t_poids <- cbind(poids1, poids6)
@@ -995,7 +722,7 @@ colnames(t_poids_df) <- c("Homme", "Femme", "Total", "homme", "femme", "total")
 
 t_poids_df <- rownames_to_column(t_poids_df, "Poids")
 
-#library(gt)
+
 t_poids_df %>%
   gt() %>%
   tab_spanner(label = "Vague 1", columns = c(2, 3, 4)) %>%
@@ -1009,7 +736,7 @@ En revanche, le poids des enquêtées semble d'être affecté par le confinement
 
 Il faut noter également que parmi les personnes qui pèsent 75kg et plus les hommes sont surreprésentés dans les deux vagues alors que 37% (53% dans la deuxième vague) de la population sont les femmes dont le poids est moins de 75kg. 
 
-
+### Fréquanxe activité sportive 
 ```{r}
 #eayy_K3: Fréquence activité sportive 30 minutes d'affilée
 
@@ -1039,9 +766,8 @@ sport6 <- wtd.table(coco6$sport, coco6$sexe, weights = coco6$POIDS_coco6,
 #remarque: pas de diff significatives, mais parmi ceux qui font du sport du sport tous les jours(21%), il y a une légère une augmentation parmi les femmes et une légère baisse pour les hommes lors de la 6ème vague
 ```
 
-Les femmes sont légerement plus susceptibles de pratiquer une activité sportive 30 minutes d'affilée plusieurs fois par semaine au lieu de tous les jours. Sinon, avec la fréquence moins elevé les résultats obtenus pendant le confinement ainsi que après sa fin sont similaires entre les deux sexes. 
 
-
+### Tableau de comparaison : acvitivité sportive
 ```{r}
 #fusionner les deux vagues
 t_sport <- cbind(sport1, sport6)
@@ -1060,8 +786,9 @@ t_sport_df %>%
     style = list(cell_text(weight = "bold")),
     locations = cells_body(columns = c(4,7)))
 ```
+Les femmes sont légerement plus susceptibles de pratiquer une activité sportive 30 minutes d'affilée plusieurs fois par semaine au lieu de tous les jours. Sinon, avec la fréquence moins elevé les résultats obtenus pendant le confinement ainsi que après sa fin sont similaires entre les deux sexes. 
 
-
+### Le sommeil
 ```{r}
 # coco1_q59_6: Temps consacré à dormir
 fct_temps_actvt <- function(x){
@@ -1089,9 +816,7 @@ sommeil_6 <- wtd.table(coco6$sommeil, coco6$sexe, weights = coco6$POIDS_coco6, e
 
 ```
 
-
-
-
+### Tableau de comparaison : Fréquence de temps à dormir 
 
 ```{r}
 #fusionner les deux vagues
@@ -1118,7 +843,10 @@ On trouve quelques changement dans les habitudes de sommeil des Français après
 Globalement, la proportion des enquetés qui dorment entre 0 et 6h a légèrement diminué et le nombre des personnes qui consacrent plus de 6h pour le sommeil est devenu un peu plus elevé. 
 
 
-#### La vie sociale
+## La vie sociale
+On vit dans la sosiété c'est-à-dire que l'on cammunique avec les gens comme d'habitude mais il y a une difficulté  pendant le confinement. Est-ce que l'on a la chance de communiquer avec des amis et la famille dans la vie réelle?
+
+### Rencontré avec des amis 
 
 ```{r}
 ### coco1_q52_1: Fréquence des rencontres avec des amis dans la vie réelle
@@ -1147,7 +875,7 @@ renco_amis6 <- wtd.table(coco6$rencontres_amis_reel, coco6$sexe, weights = coco6
 
 #remarque: lors de la première vague la majorité de la poppulation a repondu de ne jamais avoir des rencontres dans la vie réel avec leurs amis pendant les deux dérnères sem (normal car premier confinement), pas trop de diff entre les sexes
 ```
-
+### Tableau de comparaison : Fréquence des rencontres avec des amis dans la vie réelle
 ```{r}
 #fusionner les deux vagues
 t_renco_amis <- cbind(renco_amis1, renco_amis6)
@@ -1167,6 +895,8 @@ t_renco_amis_df %>%
     style = list(cell_text(weight = "bold")),
     locations = cells_body(columns = c(4,7)))
 ```
+
+### Rencontré avec la famille
 ```{r}
 ###coco1_q52_3: Fréquence des rencontres avec la famille dans la vie réelle
 # Recodage
@@ -1183,7 +913,7 @@ renco_fam6 <- wtd.table(coco6$rencontres_fam_reel, coco6$sexe, weights = coco6$P
 
 #rémarque: meme effet que avec les amis 
 ```
-
+### Tableau de comparaison : Fréquence des rencontres avec la famille dans la vie réelle
 ```{r}
 #fusionner les deux vagues
 t_renco_fam <- cbind(renco_fam1, renco_fam6)
@@ -1207,10 +937,8 @@ t_renco_fam_df %>%
 La grande majorité de la population étudiée a repondu de ne jamais voir (rencontres physiques) leurs amis ou les membres de leur famille en dehors des personnes qui sont logées avec elles deux semaines precedant l'enquete. Les resultas sont similaires pour les deux vagues et les deux sexes. 
 
 
-
-### Les activités de la vie quotidienne et les avis sur le confinement et le télétravail
-
-
+## Les activités de la vie quotidienne et les avis sur le confinement et le télétravail
+### Temps de faire du ménage
 ```{r}
 # coco1_q59_1: Temps consacré à : faire du ménage (vague1)
 #Pendant les deux dernières semaines, combien d'heures par jour, en #moyenne, avez-vous consacré aux activités suivantes : 'À faire du ménage '
@@ -1239,7 +967,7 @@ Globalement, les femmes sont plus nombreuses à s'occuper du menage selon les re
 
 
 
-*confinement*
+### confinement
 coco1_q62: Description de l'expérience du confinement (coco6_Q62mod: Expérience du confinement)
 coco1_q64: Stress lié au confinement 
 
@@ -1272,7 +1000,7 @@ conf_6 <- wtd.table(coco6$conf, coco6$sexe, weights = coco6$POIDS_coco6, exclude
 #remarque: 
 ```
 
-
+### Tableau de comparaison : Avis sur l'expérience du confinement
 ```{r}
 #fusionner les deux vagues
 t_conf_df <- cbind(conf_1, conf_6)
@@ -1296,6 +1024,7 @@ t_conf_df %>%
 
 Au moment de la prémière vague de l'enquete un quart (26%) de la population s'exprime négativement concernant le confinement. En effet, environ 7% le voient comme la perte de temps et pour 19% c'est une experience qui fatigue les nerfs. Quelques mois après le confinement, le nombre des personnes avec ces opinions atteint 36%.  
 
+#### Stress de confinement
 ```{r}
 #coco1_q64: Stress lié au confinement 
 #Dans l’ensemble le confinement vous pèse…
@@ -1318,7 +1047,7 @@ wtd.table(coco1$conf_stress, coco1$sexe, weights = coco1$coco1_POIDS, exclude = 
 ```
 Par ailleurs, pour la moitié de la population le confinement est une expérience assez ou énormèment stressante(sur l'échelle de 0 à 10 ils ont choisi 6,7,8,9 ou 10). Seulement 7% des personnes considèrent que le confinèment n'est pas du tout stressant pour elles(0). Selon les résultats obténus, les femmes et les hommes sont affecté par le confinement presque de la même  manière.
 
-*Avis télétravail(vague6)*
+#### *Avis télétravail(vague6)*
 coco6_Q132_1: Avis télétravail : permet d'optimiser sa journée
 coco6_Q132_2: Avis télétravail : permet de se concentrer
 coco6_Q132_3: Avis télétravail : mélange trop vie privée et vie professionnelle
@@ -1376,7 +1105,7 @@ Concernant l'avis sur le télétravail, la majorité des répondant pense que ce
 
 
 
-*Avis sur quotidien(vague6)*
+#### *Avis sur quotidien(vague6)*
 coco6_Q200_2: Avis sur quotidien : journées denses
 coco6_Q200_3: Avis sur quotidien : permet de profiter de la vie
 coco6_Q200_4: Avis sur quotidien : stress intense
@@ -1421,6 +1150,8 @@ wtd.table(coco6$avis_q3, coco6$sexe, weights = coco6$POIDS_coco6, exclude = "PDR
   prop(digits=1)
 ```
 
+# Test stat
 
+# Conclusion 
 
 
