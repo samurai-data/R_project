@@ -10,20 +10,6 @@ output:
     toc_float: true # Laisser la table des matières constamment
 ---
 
-```{r,warning=FALSE}
-
-library(tidyverse)
-library(questionr)
-library(readr)
-library(knitr)
-library(kableExtra)
-library(ggplot2)
-#library(gt)
-coco1 <- read.csv("fr.cdsp.ddi.elipss.202004coco1.csv")
-coco6 <- read.csv("fr.cdsp.ddi.elipss.202010.csv")
-```
-
-
 # Introduction
 
 La santé mentale est un sujet crucial du XXIème siècle qui est devenu un enjeu majeur lors de la pandémie du COVID-19. Des nombreuses études montrent que la pandémie du COVID-19 a entrainé une hausse mondiale des problèmes de santé mentales, y compris la dépression et l’anxiété généralisée.  
@@ -41,7 +27,7 @@ Dans un premier temps, nous allons présenter le profil général de la populati
 
 
 *Preparation des données et library*
-```{r,warning=FALSE}
+```{r,warning=FALSE, message=FALSE}
 
 library(tidyverse)
 library(questionr)
@@ -51,42 +37,57 @@ library(kableExtra)
 library(ggplot2)
 library(gt)
 library(tibble)
+library(sf)
 
 coco1 <- read.csv("fr.cdsp.ddi.elipss.202004coco1.csv")
 coco6 <- read.csv("fr.cdsp.ddi.elipss.202010.csv")
 ```
 
 ## carte
-
-```{r,warning=FALSE}
-# install.packages(c("sf", "geojsonio","ggspatial"))
-library(sf)
-#library(geojsonio)#peut être on en a pas besoin 
-library(ggspatial)
+```{r}
 # Import du fichier shp :
-dep <- st_read(dsn="C:/Users/white/OneDrive/Documents/GitHub/R_project/departements/departements-20180101.shp")# faut changer 
-class(dep)ger 
-class(dep)
-reg<- st_read(dsn="C:/Users/white/OneDrive/Documents/GitHub/R_project/regions/regions-20180101.shp")
-class(reg)
+reg_sf <- st_read(dsn="regions-20180101.shp")
+class(reg_sf)
+names(reg_sf)
+str(reg_sf)
 ```
 
 ```{r}
-names(dep)
-names(reg)
-```
-
-```{r}
-dep_g <- st_transform(dep,crs=2154)
-reg_g <- st_transform(reg,crs=2154)
-```
-
-```{r}
+# Geom_sf est la couche couche cartographique
 ggplot()+
-  geom_sf(data=dep_g)+
-  geom_sf(data=reg_g)
+  geom_sf(data=reg_sf)
 ```
 
+```{r}
+# Transformer
+reg_sf <- st_transform(reg_sf,crs=2154)
+```
+
+```{r}
+# Ajout de données : Depuis le 23 mars 2020, Santé publique France a lancé l'enquête CoviPrev en population générale afin de suivre l’évolution des comportements (gestes barrières, confinement, consommation d’alcool et de tabac, alimentation et activité physique) et de la santé mentale (bien-être, troubles).
+anx <- read.csv2("donnees_anxiete_reg_vague1.csv") # import
+names(anx)
+str(anx)
+anx$reg = as.character(anx$reg)
+
+```
+
+```{r}
+# Il faut supprimer les dom-tom dans reg_sf avant de fusionner les 2, sinon la carte sera une couche énorme mais sans info sur les dom-tom
+reg_sff <- left_join(reg_sf, anx, by =c("code_insee" = "reg"))
+```
+
+```{r, error=TRUE, include=FALSE}
+# Carte taux de l'anxiété par région mais ça ne marche pas
+ggplot()+
+  geom_sf(data=reg_sff,aes(fill="anxiete"),color="snow4",size=.2)+
+  viridis::scale_fill_viridis()+
+  theme_bw()+
+  labs(title = "Le taux d'état anxieux par region durant la première vague",  
+       fill="anxiete_groupe", caption="Source : Données d’enquête COVIPREV")+
+  coord_sf( datum = NA)
+
+```
 
 
 # L’étude des caractéristiques socio des femmes pour décrire notre population
@@ -104,8 +105,6 @@ fct_freq_sexe <- function(x){
 coco1$sexe <- fct_freq_sexe(coco1$eayy_A1)
 coco6$sexe <- fct_freq_sexe(coco6$eayy_A1)
 
-freq(coco1$sexe, total= T, valid=F)
-freq(coco6$sexe, total= T, valid=F)
 
 #poids de pourcentagesde sexe par vague1 
 round(wtd.table(coco1$sexe, weights = coco1$coco1_POIDS,
@@ -135,9 +134,6 @@ fct_freq_age <- function(x){
 coco1$age <- fct_freq_age(coco1$eayy_A2A_rec)
 coco6$age <- fct_freq_age(coco6$eayy_A2A_rec)
 
-
-freq(coco1$age, total= T, valid=F)
-freq(coco6$age, total= T, valid=F)
 ```
 
 ```{r,warning=FALSE}
@@ -151,8 +147,7 @@ pop_vague6<-wtd.table(coco6$age,coco6$sexe,
           weights = coco6$POIDS_coco6, useNA = "ifany") %>% 
   prop(digits=1)
 
-pop_vague1
-pop_vague6
+
 ```
 
 ## La population de l'etude entre la sexe et l'âge
@@ -257,8 +252,6 @@ coco1$couple <- fct_freq_couple(coco1$eayy_A5)
 coco6$couple <- fct_freq_couple(coco6$eayy_A5)
 ## eayy_A5: Vit en couple
 
-freq(coco1$couple, total= T, valid=F)
-freq(coco6$couple, total= T, valid=F)
 ```
 
 ```{r}
@@ -298,7 +291,7 @@ La cohabitation des couples est ensuite comparée.
 La cohabitation en couple est répartie à peu près à parts égales entre les sexes. Cependant, dans les couples non cohabitants, les femmes sont environ 60% plus nombreuses que les hommes, tant à la vague 1 qu'à la vague 6. Et de la vague 1 à la vague 6, le couple non cohabitant a diminué de 3% chez les hommes, alors qu'il a augmenté de 4% chez les femmes. Ce changement n'est pas très important, mais le fait qu'il y ait une augmentation ou une diminution, plutôt qu'une diminution des deux, suggère qu'il y a un facteur en jeu.
 
 
-# Sentiment croise de pop femmes
+# Sentiment de negative
 
 Comment les hommes et les femmes se sentent-ils chacun pendant le confinement ? Et y a-t-il des changements mentaux entre la première et la sixième vague ? On compare les différences entre les hommes et les femmes en fonction de quatre émotions : la solitude, la nervosité, le décourage et la tristesse, ainsi que lors de la première et de la sixième vague.
 
@@ -469,7 +462,7 @@ ggplot()+
 ### Tableau de comparaison : Nerveux
 ```{r}
 #fusionner les deux vagues
-s_nerveux <- cbind(nervex6, nerveux6)
+s_nerveux <- cbind(nerveux6, nerveux6)
 #presenter le tableau
 
 s_nerveux_df <- as.data.frame(s_nerveux)
@@ -736,7 +729,7 @@ En revanche, le poids des enquêtées semble d'être affecté par le confinement
 
 Il faut noter également que parmi les personnes qui pèsent 75kg et plus les hommes sont surreprésentés dans les deux vagues alors que 37% (53% dans la deuxième vague) de la population sont les femmes dont le poids est moins de 75kg. 
 
-### Fréquanxe activité sportive 
+### Fréqence activité sportive 
 ```{r}
 #eayy_K3: Fréquence activité sportive 30 minutes d'affilée
 
@@ -846,7 +839,7 @@ Globalement, la proportion des enquetés qui dorment entre 0 et 6h a légèremen
 ## La vie sociale
 On vit dans la sosiété c'est-à-dire que l'on cammunique avec les gens comme d'habitude mais il y a une difficulté  pendant le confinement. Est-ce que l'on a la chance de communiquer avec des amis et la famille dans la vie réelle?
 
-### Rencontré avec des amis 
+### Rencontres avec des amis 
 
 ```{r}
 ### coco1_q52_1: Fréquence des rencontres avec des amis dans la vie réelle
@@ -896,7 +889,7 @@ t_renco_amis_df %>%
     locations = cells_body(columns = c(4,7)))
 ```
 
-### Rencontré avec la famille
+### Rencontres avec la famille
 ```{r}
 ###coco1_q52_3: Fréquence des rencontres avec la famille dans la vie réelle
 # Recodage
