@@ -8,6 +8,7 @@ output:
     toc: yes # ajout d'une table des matières
     toc_depth : '3' # Précision de la table des matières
     toc_float: true # Laisser la table des matières constamment
+    code_folding: hide
 ---
 
 # Introduction
@@ -26,7 +27,7 @@ La base de données utilisée pour notre étude provient de l’enquête Coping 
 Dans un premier temps, nous allons présenter le profil général de la population observée ainsi que les variables déterminantes du bien-être et de la santé mentale. Ensuite, nous allons nous concentrer sur les facteurs qui peuvent avoir un impact sur la santé mentale des personnes enquêtées. Enfin, nous allons présenter les résultats principaux de notre étude dans la partie finale de notre dossier.  
 
 
-*Preparation des données et library*
+*Chargement des données et des libraries*
 ```{r,warning=FALSE, message=FALSE}
 
 library(tidyverse)
@@ -44,56 +45,58 @@ coco6 <- read.csv("fr.cdsp.ddi.elipss.202010.csv")
 ```
 
 ## carte
-```{r}
+```{r,error=TRUE, include=FALSE}
 # Import du fichier shp :
-reg_sf <- st_read(dsn="regions-20180101.shp")
-class(reg_sf)
-names(reg_sf)
-str(reg_sf)
+#reg_sf <- st_read(dsn="regions-20180101.shp")
+#class(reg_sf)
+#names(reg_sf)
+#str(reg_sf)
 ```
 
 ```{r}
 # Geom_sf est la couche couche cartographique
-ggplot()+
-  geom_sf(data=reg_sf)
+#ggplot()+
+ # geom_sf(data=reg_sf)
 ```
 
-```{r}
+```{r, error=TRUE, include=FALSE}
 # Transformer
-reg_sf <- st_transform(reg_sf,crs=2154)
+#reg_sf <- st_transform(reg_sf,crs=2154)
 ```
 
-```{r}
-# Ajout de données : Depuis le 23 mars 2020, Santé publique France a lancé l'enquête CoviPrev en population générale afin de suivre l’évolution des comportements (gestes barrières, confinement, consommation d’alcool et de tabac, alimentation et activité physique) et de la santé mentale (bien-être, troubles).
-anx <- read.csv2("donnees_anxiete_reg_vague1.csv") # import
-names(anx)
-str(anx)
-anx$reg = as.character(anx$reg)
+```{r, error=TRUE, include=FALSE}
+# Ajout de données : Depuis le 23 mars 2020, Santé publique France a lancé l'enquête CoviPrev en population générale afin de suivre l’évolution des comportements (gestes barrières, confinement, consommation d’alcool et de tabac, alimentation et activité physique) et de la santé mentale (bien-être, troubles)
+#anx <- read.csv2("donnees_anxiete_reg_vague1.csv") # import
+#names(anx)
+#str(anx)
+#anx$reg = as.character(anx$reg)
 
 ```
 
-```{r}
+```{r, error=TRUE, include=FALSE}
 # Il faut supprimer les dom-tom dans reg_sf avant de fusionner les 2, sinon la carte sera une couche énorme mais sans info sur les dom-tom
-reg_sff <- left_join(reg_sf, anx, by =c("code_insee" = "reg"))
+#reg_sff <- left_join(reg_sf, anx, by =c("code_insee" = "reg"))
 ```
 
 ```{r, error=TRUE, include=FALSE}
 # Carte taux de l'anxiété par région mais ça ne marche pas
-ggplot()+
-  geom_sf(data=reg_sff,aes(fill="anxiete"),color="snow4",size=.2)+
-  viridis::scale_fill_viridis()+
-  theme_bw()+
-  labs(title = "Le taux d'état anxieux par region durant la première vague",  
-       fill="anxiete_groupe", caption="Source : Données d’enquête COVIPREV")+
-  coord_sf( datum = NA)
+#ggplot()+
+ # geom_sf(data=reg_sff,aes(fill="anxiete"),color="snow4",size=.2)+
+#  viridis::scale_fill_viridis()+
+ # theme_bw()+
+  #labs(title = "Le taux d'état anxieux par region durant la première vague",  
+      # fill="anxiete_groupe", caption="Source : Données d’enquête COVIPREV")+
+ # coord_sf( datum = NA)
 
 ```
 
 
-# L’étude des caractéristiques socio des femmes pour décrire notre population
-##  La sexe et l'âge
+# L'obsérvation des caractéristiques socio-démographiques de la population etudiée
+L'objectif est de présenter les caractéristiques principales des répondants à l'enquête. 
+
+##  Le sexe et l'âge
 ### sexe
-```{r}
+```{r, solution = T}
 fct_freq_sexe <- function(x){
   recod <- fct_collapse(factor(x),
   "Homme"="1",
@@ -118,7 +121,7 @@ round(wtd.table(coco6$sexe, weights = coco6$POIDS_coco6,
   prop.table()*100,1)#<<
 ```
 
-### ages
+### âge
 ```{r}
 fct_freq_age <- function(x){
   recod <- fct_collapse(factor(x),
@@ -418,8 +421,20 @@ fct_freq_senti <- function(x){
   )
   return(recod)
 }
+
+#la fonction pour le sentiment 'nerveux' vague 1 uniquement 
+fct_freq_senti_nerv <- function(x){
+  recod <- fct_collapse(factor(x),
+                        "En permanence"="1", 
+                        "Souvent"="2", 
+                        "Quelques fois"="3",
+                        "Rarement"="4",
+                        "Jamais" = "5"
+  )
+  return(recod)
+}
 # Recodage
-coco1$nerveux <- fct_freq_senti(coco1$coco1_q16)
+coco1$nerveux <- fct_freq_senti_nerv(coco1$coco1_q16)
 coco1$decourage <- fct_freq_senti(coco1$coco1_q17)
 coco1$triste <- fct_freq_senti(coco1$coco1_q19)
 
@@ -1144,6 +1159,26 @@ wtd.table(coco6$avis_q3, coco6$sexe, weights = coco6$POIDS_coco6, exclude = "PDR
 ```
 
 # Test stat
+
+Maintenant on souhate savoir si le degré de nervosité pendant le confinement est lié avec le fait d'être une femme ou un homme.
+
+#### Tableau croisé
+
+```{r}
+addmargins(table(coco1$sexe, coco1$nerveux, useNA="ifany"))
+```
+
+On remarque que le nombre des femmes qui se sentent en premanence, souvent ou quelques fois seules pendant les deux semaines précedant l'enquête est significativement plus elévé. Ainsi, cela serait judicieux de tester cette hypothèse avec le test khi-2. 
+
+
+#### Test d'indépendance khi-2
+
+
+```{r}
+chisq.test(table(coco1$sexe, coco1$coco1_q16))
+```
+
+D'après les resultas obténus (notamment le p-value), on trouve l'association très significative entre ces deux variables. On peut alors conclure que probablement il existe un lien entre le fait d'être une femme ou un homme et le sentiment de nervosité dû à la pandémie et le confinement. 
 
 # Conclusion 
 
