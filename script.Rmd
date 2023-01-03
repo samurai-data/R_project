@@ -262,7 +262,8 @@ solitude6<-wtd.table(coco6$solitude,coco6$sexe,
   prop(digits=1)
 ```
 
-*Graphique : Solitude* 
+**Graphique : Solitude** 
+
 ```{r}
 vg1_genre_solitude <- rprop(table(sexe=coco1$sexe,
             solitude=coco1$solitude))
@@ -274,8 +275,8 @@ vg1_genre_solitude %>%
   ggplot()+
   aes(fill=sexe, x=solitude, y= Freq) %>% 
   geom_bar(col="black",stat="identity", position="dodge")+
-  labs(title="Solitudé selon le genre pendant le 1er confinement",
-       x="C'est senti·e solitudé",y="%",fill="",
+  labs(title="Solitude selon le genre pendant la vague 1",
+       y="%",fill="",
        caption = "Source : Coco1 - ELIPSS, CDSP, avril 2020")+
   viridis::scale_fill_viridis(discrete=T)+
   theme_bw()
@@ -292,27 +293,29 @@ vg6_genre_solitude %>%
   ggplot()+
   aes(fill=sexe, x=solitude, y= Freq) %>% 
   geom_bar(col="black",stat="identity", position="dodge")+
-  labs(title="Solitudé selon le genre pendant le 1er confinement",
-       x="C'est senti·e solitudé",y="%",fill="",
+  labs(title="Solitude selon le genre pendant la vague 6",
+       y="%",fill="",
        caption = "Source : Coco6 - ELIPSS, CDSP, Octobre 2020")+
   viridis::scale_fill_viridis(discrete=T)+
   theme_bw()
 ```
 
-```{r}
+```{r, results='hide'}
 coco1 %>% 
   filter(is.na(solitude)==F) %>% 
 ggplot()+
   aes(fill=solitude, x=sexe)+
   geom_bar(position="fill")
-```
 
-```{r}
 coco6 %>% 
   filter(is.na(solitude)==F) %>% 
 ggplot()+
   aes(fill=solitude, x=sexe)+
   geom_bar(position="fill")
+
+```
+
+```{r}
 
 #fusionner les deux vagues
 s_solitude <- cbind(solitude6, solitude6)
@@ -375,7 +378,7 @@ coco6$triste <- fct_freq_senti(coco6$coco6_Q19)
 ```
 
 
-*Nerveux*
+**Nerveux**
 ```{r}
 nerveux1<-wtd.table(coco1$nerveux,coco1$sexe,
           weights = coco1$coco1_POIDS, useNA = "ifany") %>% 
@@ -406,7 +409,7 @@ ggplot()+
 
 Ensuite, la nervosité. Si l'on compare les hommes et les femmes, le pourcentage d'hommes et de femmes qui sont toujours nerveux est la presque même lors de la vague1, mais cette tendance est plus forte chez les hommes. Cependant, lors de les vagues 1 et 6, en general, les femmes étaient toujours plus nerveuses que les hommes. Cela suggère que certains facteurs ont rendu les femmes plus négatives dans une période prolongée de confinement.
 
-*Decourage*
+**Dcourage**
 ```{r}
 decourage1<-wtd.table(coco1$decourage,coco1$sexe,
           weights = coco1$coco1_POIDS, useNA = "ifany") %>% 
@@ -453,7 +456,7 @@ s_decourage_df %>%
 
 Et le découragement ne montre pas de différence significative entre les hommes et les femmes, mais la proportion de femmes de la vague 1 à la vague 6 augmente dans " souvent ", alors que la proportion d'hommes et de femmes qui ressentent le découragement " jamais " tend à diminuer. Le confinement n'a pas du tout d'impact sur les hommes et les femmes.
 
-*Triste*
+**Triste**
 ```{r}
 triste1 <- wtd.table(coco1$triste,coco1$sexe,
           weights = coco1$coco1_POIDS, useNA = "ifany") %>% 
@@ -1001,7 +1004,7 @@ Maintenant on souhate savoir si le degré de nervosité pendant le confinement e
 addmargins(table(coco1$sexe, coco1$nerveux, useNA="ifany"))
 ```
 
-On remarque que le nombre des femmes qui se sentent en premanence, souvent ou quelques fois seules pendant les deux semaines précedant l'enquête est significativement plus elévé. Ainsi, cela serait judicieux de tester cette hypothèse avec le test khi-2. 
+On remarque que le nombre des femmes qui se sentent en premanence, souvent ou quelques fois nerveux pendant les deux semaines précedant l'enquête est significativement plus elévé. Ainsi, cela serait judicieux de tester cette hypothèse avec le test khi-2. 
 
 
 ### Test d'indépendance khi-2
@@ -1013,6 +1016,7 @@ chisq.test(table(coco1$sexe, coco1$coco1_q16))
 D'après les resultas obténus (notamment le p-value), on trouve l'association très significative entre ces deux variables. On peut alors conclure que probablement il existe un lien entre le fait d'être une femme ou un homme et le sentiment de nervosité dû à la pandémie et le confinement. 
 
 ## Carte
+**Fond de carte**
 ```{r}
 
 # Import du fichier shp :
@@ -1025,19 +1029,45 @@ str(reg_sf)
 ggplot()+
   geom_sf(data=reg_sf)
 
-# Transformer
-reg_sf <- st_transform(reg_sf,crs=2154)
+```
 
-# Ajout de données : Depuis le 23 mars 2020, Santé publique France a lancé l'enquête CoviPrev en population générale afin de suivre l’évolution des comportements (gestes barrières, confinement, consommation d’alcool et de tabac, alimentation et activité physique) et de la santé mentale (bien-être, troubles).
+**Ajout de données** 
+
+Depuis le 23 mars 2020, Santé publique France a lancé l'enquête CoviPrev en population générale afin de suivre l’évolution des comportements (gestes barrières, confinement, consommation d’alcool et de tabac, alimentation et activité physique) et de la santé mentale (bien-être, troubles) de la population en France métropolitaine. On va voir la carte du taux de la population ayant l'anxiété durant la vague 1
+
+```{r}
+# Supprimer les régions dom-tom d'abord
+reg_sf$code_insee
+reg_sf2 <- reg_sf %>% slice(-c(1, 2, 3, 8, 12, 14))
+ggplot()+
+  geom_sf(data=reg_sf2)
+# Transformer
+reg_sf2 <- st_transform(reg_sf2,crs=2154)
+```
+
+
+```{r}
 anx <- read.csv2("~/GitHub/R_project/donnees_anxiete_reg_vague1.csv") # import
 names(anx)
 str(anx)
 anx$reg = as.character(anx$reg)
-
-# Il faut supprimer les dom-tom dans reg_sf avant de fusionner les 2, sinon la carte sera une couche énorme mais sans info sur les dom-tom
-reg_sff <- left_join(reg_sf, anx, by =c("code_insee" = "reg"))
-
+#Fusionner
+reg_sff <- left_join(reg_sf2, anx, by =c("code_insee" = "reg"))
 ```
+
+**Carte de l'anxiété selon region**
+```{r}
+ggplot()+
+  geom_sf(data=reg_sff,aes(fill=anxiete),color="snow4",size=.2)+
+  viridis::scale_fill_viridis()+
+  theme_bw()+
+  labs(title = "Le taux de population avec l'anxiété au premier vague de covid",  
+       fill="%", caption="Source : L'enquête CoviPrev 2020")+
+  coord_sf( datum = NA)
+```
+**Commentaire**
+
+Au cours du premier vague de covid, 
 
 # Conclusion 
 
