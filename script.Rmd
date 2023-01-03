@@ -33,7 +33,7 @@ Dans un premier temps, nous allons présenter le profil général de la populati
 
 *Chargement des données et des libraries*
 
-```{r,warning=FALSE, message=FALSE, class.source = "fold-show"}
+```{r,warning=FALSE, message=FALSE}
 
 library(tidyverse)
 library(questionr)
