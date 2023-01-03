@@ -44,51 +44,6 @@ coco1 <- read.csv("fr.cdsp.ddi.elipss.202004coco1.csv")
 coco6 <- read.csv("fr.cdsp.ddi.elipss.202010.csv")
 ```
 
-## carte
-```{r,error=TRUE, include=FALSE}
-# Import du fichier shp :
-#reg_sf <- st_read(dsn="regions-20180101.shp")
-#class(reg_sf)
-#names(reg_sf)
-#str(reg_sf)
-```
-
-```{r}
-# Geom_sf est la couche couche cartographique
-#ggplot()+
- # geom_sf(data=reg_sf)
-```
-
-```{r, error=TRUE, include=FALSE}
-# Transformer
-#reg_sf <- st_transform(reg_sf,crs=2154)
-```
-
-```{r, error=TRUE, include=FALSE}
-# Ajout de données : Depuis le 23 mars 2020, Santé publique France a lancé l'enquête CoviPrev en population générale afin de suivre l’évolution des comportements (gestes barrières, confinement, consommation d’alcool et de tabac, alimentation et activité physique) et de la santé mentale (bien-être, troubles)
-#anx <- read.csv2("donnees_anxiete_reg_vague1.csv") # import
-#names(anx)
-#str(anx)
-#anx$reg = as.character(anx$reg)
-
-```
-
-```{r, error=TRUE, include=FALSE}
-# Il faut supprimer les dom-tom dans reg_sf avant de fusionner les 2, sinon la carte sera une couche énorme mais sans info sur les dom-tom
-#reg_sff <- left_join(reg_sf, anx, by =c("code_insee" = "reg"))
-```
-
-```{r, error=TRUE, include=FALSE}
-# Carte taux de l'anxiété par région mais ça ne marche pas
-#ggplot()+
- # geom_sf(data=reg_sff,aes(fill="anxiete"),color="snow4",size=.2)+
-#  viridis::scale_fill_viridis()+
- # theme_bw()+
-  #labs(title = "Le taux d'état anxieux par region durant la première vague",  
-      # fill="anxiete_groupe", caption="Source : Données d’enquête COVIPREV")+
- # coord_sf( datum = NA)
-
-```
 
 
 # L'obsérvation des caractéristiques socio-démographiques de la population etudiée
@@ -1181,5 +1136,33 @@ chisq.test(table(coco1$sexe, coco1$coco1_q16))
 D'après les resultas obténus (notamment le p-value), on trouve l'association très significative entre ces deux variables. On peut alors conclure que probablement il existe un lien entre le fait d'être une femme ou un homme et le sentiment de nervosité dû à la pandémie et le confinement. 
 
 # Conclusion 
+
+## carte
+```{r}
+
+# Import du fichier shp :
+reg_sf <- st_read(dsn="~/GitHub/R_project/regions/regions-20180101.shp")
+class(reg_sf)
+names(reg_sf)
+str(reg_sf)
+
+# Geom_sf est la couche couche cartographique
+ggplot()+
+  geom_sf(data=reg_sf)
+
+# Transformer
+reg_sf <- st_transform(reg_sf,crs=2154)
+
+# Ajout de données : Depuis le 23 mars 2020, Santé publique France a lancé l'enquête CoviPrev en population générale afin de suivre l’évolution des comportements (gestes barrières, confinement, consommation d’alcool et de tabac, alimentation et activité physique) et de la santé mentale (bien-être, troubles).
+anx <- read.csv2("~/GitHub/R_project/donnees_anxiete_reg_vague1.csv") # import
+names(anx)
+str(anx)
+anx$reg = as.character(anx$reg)
+
+# Il faut supprimer les dom-tom dans reg_sf avant de fusionner les 2, sinon la carte sera une couche énorme mais sans info sur les dom-tom
+reg_sff <- left_join(reg_sf, anx, by =c("code_insee" = "reg"))
+
+```
+
 
 
