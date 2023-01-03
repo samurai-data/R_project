@@ -364,7 +364,7 @@ fct_freq_senti_nerv <- function(x){
   return(recod)
 }
 # Recodage
-coco1$nerveux <- fct_freq_senti_nerv(coco1$coco1_q16)
+coco1$nerveux <- fct_freq_senti(coco1$coco1_q16)
 coco1$decourage <- fct_freq_senti(coco1$coco1_q17)
 coco1$triste <- fct_freq_senti(coco1$coco1_q19)
 
@@ -402,23 +402,6 @@ ggplot()+
   aes(fill=nerveux, x=sexe)+
   geom_bar(position="fill")
 
-#fusionner les deux vagues
-s_nerveux <- cbind(nerveux1, nerveux6)
-#presenter le tableau
-
-s_nerveux_df <- as.data.frame(s_nerveux)
-colnames(s_nerveux_df) <- c("Homme", "Femme", "Total", "homme", "femme", "total")
-
-s_nerveux_df <- rownames_to_column(s_nerveux_df, "Degré de nerveux")
-
-#library(gt)
-s_nerveux_df %>%
-  gt() %>%
-  tab_spanner(label = "Vague 1", columns = c(2, 3, 4)) %>%
-  tab_spanner(label = "Vague 6", columns = c(5, 6, 7)) %>%
-  tab_style(
-    style = list(cell_text(weight = "bold")),
-    locations = cells_body(columns = c(4,7)))
 ```
 
 Ensuite, la nervosité. Si l'on compare les hommes et les femmes, le pourcentage d'hommes et de femmes qui sont toujours nerveux est la presque même lors de la vague1, mais cette tendance est plus forte chez les hommes. Cependant, lors de les vagues 1 et 6, en general, les femmes étaient toujours plus nerveuses que les hommes. Cela suggère que certains facteurs ont rendu les femmes plus négatives dans une période prolongée de confinement.
