@@ -800,7 +800,7 @@ t_renco_fam_df %>%
     locations = cells_body(columns = c(4,7)))
 ```
 
-La grande majorité de la population étudiée a repondu de ne jamais voir (rencontres physiques) leurs amis ou les membres de leur famille en dehors des personnes qui sont logées avec elles deux semaines precedant l'enquete. Les resultas sont similaires pour les deux vagues et les deux sexes. 
+La grande majorité de la population étudiée a repondu de ne jamais voir (rencontres physiques) leurs amis ou les membres de leur famille en dehors des personnes qui sont logées avec elles deux semaines precedant l'enquete. Les resultats sont similaires pour les deux vagues et les deux sexes. 
 
 ## Les activités de la vie quotidienne et les avis sur le confinement et le télétravail
 
@@ -950,7 +950,7 @@ wtd.table(coco6$avis4, coco6$sexe, weights = coco6$POIDS_coco6, exclude = "PDR",
   prop(digits=1)
 ```
 
-Concernant l'avis sur le télétravail, la majorité des répondant pense que ce mode de travail permets d'optimiser sa journée(62%). Par contre, pour le reste de la population ce n'est pas le cas. Par ailleurs, 75% repondent négativement quand on leur demande si le télétravail permets de se concentrer et 35% pensent que le télétravail rend la conciliation de la vie privée avec la vie professionnelle plus compliquée puisque les limites entre les deux disparaissent. Pour 15% de la population le télétravail est également le source une source de la baisse de l'efficacité. 
+Concernant l'avis sur le télétravail, la majorité des répondant pense que ce mode de travail permets d'optimiser sa journée (62%). Par contre, pour le reste de la population ce n'est pas le cas. Par ailleurs, 75% repondent négativement quand on leur demande si le télétravail permets de se concentrer et 35% pensent que le télétravail rend la conciliation de la vie privée avec la vie professionnelle plus compliquée puisque les limites entre les deux disparaissent. Pour 15% de la population le télétravail est également le source une source de la baisse de l'efficacité. 
 
 
 
@@ -1025,17 +1025,11 @@ class(reg_sf)
 names(reg_sf)
 str(reg_sf)
 
-# Geom_sf est la couche couche cartographique
-ggplot()+
-  geom_sf(data=reg_sf)
-
 ```
 
-**Ajout de données** 
 
-Depuis le 23 mars 2020, Santé publique France a lancé l'enquête CoviPrev en population générale afin de suivre l’évolution des comportements (gestes barrières, confinement, consommation d’alcool et de tabac, alimentation et activité physique) et de la santé mentale (bien-être, troubles) de la population en France métropolitaine. On va voir la carte du taux de la population ayant l'anxiété durant la vague 1
 
-```{r}
+```{r, results='hide'}
 # Supprimer les régions dom-tom d'abord
 reg_sf$code_insee
 reg_sf2 <- reg_sf %>% slice(-c(1, 2, 3, 8, 12, 14))
@@ -1044,7 +1038,9 @@ ggplot()+
 # Transformer
 reg_sf2 <- st_transform(reg_sf2,crs=2154)
 ```
+**Ajout de données** 
 
+Depuis le 23 mars 2020, Santé publique France a lancé l'enquête CoviPrev en population générale afin de suivre l’évolution des comportements (gestes barrières, confinement, consommation d’alcool et de tabac, alimentation et activité physique) et de la santé mentale (bien-être, troubles) de la population en France métropolitaine. On va voir la carte du taux de la population ayant l'anxiété durant la vague 1
 
 ```{r}
 anx <- read.csv2("~/GitHub/R_project/donnees_anxiete_reg_vague1.csv") # import
@@ -1067,10 +1063,20 @@ ggplot()+
 ```
 **Commentaire**
 
-Au cours du premier vague de covid, 
+Au cours du première vague en fin mars 2020, les regions où la population a le plus haut taux d'anxiété est Bourgogne-Franche-Comté, puis ce sont Île-de-France, Grand-Est, Hauts-de-France. On peut expliquer cela par la réalité que ce sont aussi les regions où le taux de positivité des tests pour le SARS-CoV-2 au 24 mars 2020 sont le plus haut. Ayant les proches testés positive peut ramener les sentimens négative tel que l'anxiété.
 
 # Conclusion 
 
-Les émotions négatives ressenties lors du confinement étaient fondamentalement plus fortement ressenties par les femmes (" Souvent " était plus répandu que chez les hommes). On suppose donc qu'il y a un certain élément de cela. Nous avons donc examiné la santé physique. L'obésité était plus répandue chez les hommes, tandis que, contrairement aux hommes, les femmes étaient plus susceptibles de peser moins de 75 kg. En revanche, le sport est pratiqué plusieurs fois par semaine par les femmes. Le temps de sommeil ne varie pas non plus de manière significative entre les hommes et les femmes. En d'autres termes, il n'y a pas de différence significative entre les hommes et les femmes en termes de santé physique, et cela n'est pas dû à la mentalité négative des femmes. Le suivant est La vie sociale. A l'exception de ceux qui sont restés deux semaines avant l'enquête, les répondants n'ont pas vu leurs amis ou leur famille (ils ne les ont pas rencontrés physiquement). En d'autres termes, nous ne constatons aucune différence entre les hommes et les femmes. Ensuite, il y a le temps consacré aux tâches ménagères. Cela représente plus de temps consacré aux tâches ménagères par les femmes que par les hommes. Cela suggère que le temps consacré aux tâches ménagères peut être un facteur négatif pour les femmes de cette étude. Toutefois, il ne s'agit pas d'un facteur majeur.
-Pour les hommes comme pour les femmes, le confinement lui-même a un impact sur eux. Le télétravail est source de stress pour les hommes et les femmes car leur vie privée et leur lieu de travail sont mélangés. Les relations sociales n'ont pas changé de manière significative, c'est-à-dire que la communication se fait avec les mêmes personnes. Et par le test khi-2, nous pouvons conclure que les différences entre les hommes et les femmes sont liées au stress et aux sentiments négatifs qu'ils éprouvent.
-On peut dire que les différences entre les sexes, et non les facteurs externes (confinement, télétravail, tâches ménagères, sports, sommeil, etc).
+Les émotions négatives ressenties lors du confinement étaient plus fortement ressenties par les femmes. On suppose donc qu'il y a un certain éléments évoquant ce phénomène. 
+
+Nous avons donc examiné la santé physique, la vie sociale et l'avis sur le confinement des hommes et des femmes durant les deux vague du covid : le vague 1 et le vague 6. 
+
+Concernant la santé physique, l'obésité était plus répandue chez les hommes alors que les femmes étaient plus susceptibles d'avoi un poids correct. Les hommes sont plus nombreux à pratiquer le sport tous les jours que les femmes mais les femmes semblent plus nombreuses à dormir plus de 8h par jour. On peut imaginer que les hommes ont plus de temps libres à faire certaines activités recréatives comme le sport. En revanche, les femmes ont plutôt besoin de se reposer après avoir fait les tâches toute la journée.
+
+Concernant la vie sociale, les resultats sont similaires pour les deux vagues et les deux sexes : La majorité de la population étudiée a repondu de ne jamais voir (rencontres physiques) leurs amis ou les membres de leur famille.
+
+En regardant à l'organisation des tâches ménagères, on voit que les femmes sont plus nombreuses à consacrer plus de deux heures par jour à faire du menage alors que qu'environ 60 % des hommes consacrent moins d'une heure à s'occuper du ménage. Cela suggère que le temps consacré aux tâches ménagères peut être un facteur contribuant aux sentiments négatifs chez les femmes.
+
+Les femmes et les hommes sont affecté par le confinement presque de la même manière car leur niveau de stresse se rassemble. Pourtant, on remarque quelques différences dans le vécu du confinement et du télétravail. Les femmes sont moins nombreuses que les hommes à penser que leur vie quotidienne en confinement leur permet à profiter de la vie et le télétravail leur permet de se concentrer. 
+
+Nous pouvons conclure que les femmes et les hommes ont les manières différentes d'organiser leur activités durant le temps des vagues du covid. Le fait de devoir concilier les tâches ménagères, le travail et la vie sociale est probablement la raison pourlaquelle les femmes sont plus nombreuses à se sentir nerveuse que les hommes. 
